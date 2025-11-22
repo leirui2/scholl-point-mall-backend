@@ -1,8 +1,8 @@
-package com.lei.usercenter.service;
+package com.lei.mall.service;
 
-import com.lei.usercenter.model.entity.User;
-import com.lei.usercenter.model.user.UserRegisterRequest;
-import com.lei.usercenter.model.vo.UserLoginVO;
+import com.lei.mall.model.entity.User;
+import com.lei.mall.model.user.UserRegisterRequest;
+import com.lei.mall.model.vo.UserLoginVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

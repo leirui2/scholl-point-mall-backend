@@ -1,4 +1,4 @@
-# UserCenter 用户中心模板项目
+# mall 用户中心模板项目
 
 这是一个可复用的后端用户中心模板项目，基于Spring Boot构建，提供了完整的用户管理功能，包括用户注册、登录、权限控制等。你可以将此项目作为模板，快速构建其他需要用户系统的项目。
 
@@ -25,8 +25,8 @@
 
 ### 4. 接口文档
 - 集成Knife4j Swagger文档
-  Knife4j UI: http://localhost:8083/api/doc.html
-  API 文档: http://localhost:8083/api/v2/api-docs
+  Knife4j UI: http://localhost:8084/api/doc.html
+  API 文档: http://localhost:8084/api/v2/api-docs
 
 ## 技术栈
 - Spring Boot 2.x
@@ -43,7 +43,7 @@
 src
 ├── main
 │   ├── java
-│   │   └── com.lei.usercenter
+│   │   └── com.lei.mall
 │   │       ├── aspect         # 切面类
 │   │       ├── common         # 通用类（返回结果、错误码等）
 │   │       ├── config         # 配置类
@@ -58,12 +58,12 @@ src
 │   │       ├── service        # 服务层
 │   │       │   └── impl       # 服务实现
 │   │       └── utils          # 工具类
-│   │       └── UserCenterApplication.java  # 启动类
+│   │       └── mallApplication.java  # 启动类
 │   └── resources
-│       ├── com.lei.usercenter.mapper  # MyBatis XML映射文件
+│       ├── com.lei.mall.mapper  # MyBatis XML映射文件
 │       └── application.yml            # 配置文件
 └── test                           # 测试代码
-    └── java.com.lei.usercenter
+    └── java.com.lei.mall
 ```
 
 ## 核心接口
@@ -173,7 +173,7 @@ src
 1. 创建数据库并执行 `sql/user.sql` 脚本
 2. 修改 `application.yml` 中的数据库和Redis配置
 3. 编译打包：`mvn clean package`
-4. 运行：`java -jar target/usercenter-*.jar`
+4. 运行：`java -jar target/mall-*.jar`
 
 ## 使用模板
 
