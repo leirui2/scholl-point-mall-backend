@@ -1,19 +1,19 @@
 package com.lei.mall.controller;
 
-import io.swagger.annotations.Api;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.FileStorageService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author lei
  */
 @RestController
+@RequestMapping("/file")
 public class FileDetailController {
 
     @Resource
