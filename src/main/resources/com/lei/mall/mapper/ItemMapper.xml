@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.mall.mapper.ItemMapper">
+
+    <resultMap id="BaseResultMap" type="com.lei.mall.model.entity.Item">
+            <id property="id" column="id" />
+            <result property="categoryid" column="categoryId" />
+            <result property="name" column="name" />
+            <result property="description" column="description" />
+            <result property="imageurl" column="imageUrl" />
+            <result property="price" column="price" />
+            <result property="stock" column="stock" />
+            <result property="unit" column="unit" />
+            <result property="status" column="status" />
+            <result property="sortorder" column="sortOrder" />
+            <result property="isDelete" column="isDelete" />
+            <result property="createtime" column="createTime" />
+            <result property="updatetime" column="updateTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,categoryId,name,description,imageUrl,price,
+        stock,unit,status,sortOrder,isDelete,
+        createTime,updateTime
+    </sql>
+</mapper>

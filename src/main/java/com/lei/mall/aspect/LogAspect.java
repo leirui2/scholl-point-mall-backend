@@ -146,8 +146,8 @@ public class LogAspect {
             operationLog.setStatus(1); // 失败
             // 限制errorMsg长度，避免超出数据库字段限制
             String errorMsg = e.getMessage();
-            if (errorMsg != null && errorMsg.length() > 1000) {
-                errorMsg = errorMsg.substring(0, 1000);
+            if (errorMsg != null && errorMsg.length() > 500) {
+                errorMsg = errorMsg.substring(0, 500);
             }
             operationLog.setErrorMsg(errorMsg);
             throw e;

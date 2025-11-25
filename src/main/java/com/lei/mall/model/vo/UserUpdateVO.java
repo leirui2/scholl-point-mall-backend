@@ -3,7 +3,6 @@ package com.lei.mall.model.vo;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 用户修改信息VO（脱敏）

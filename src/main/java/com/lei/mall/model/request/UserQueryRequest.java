@@ -1,4 +1,4 @@
-package com.lei.mall.model.user;
+package com.lei.mall.model.request;
 
 import com.lei.mall.common.PageRequest;
 import lombok.Data;

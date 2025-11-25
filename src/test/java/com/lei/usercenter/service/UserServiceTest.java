@@ -1,15 +1,10 @@
 package com.lei.mall.service;
 
-import com.lei.mall.model.entity.User;
-import com.lei.mall.model.user.UserRegisterRequest;
-import com.lei.mall.model.vo.UserLoginVO;
-import org.junit.jupiter.api.Assertions;
+import com.lei.mall.model.request.UserRegisterRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 
 @SpringBootTest
 public class UserServiceTest {

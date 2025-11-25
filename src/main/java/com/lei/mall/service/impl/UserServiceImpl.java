@@ -12,7 +12,7 @@ import com.lei.mall.mapper.UserActivityMapper;
 import com.lei.mall.model.entity.LoginLog;
 import com.lei.mall.model.entity.User;
 import com.lei.mall.model.entity.UserActivity;
-import com.lei.mall.model.user.*;
+import com.lei.mall.model.request.*;
 import com.lei.mall.model.vo.UserLoginVO;
 import com.lei.mall.model.vo.UserUpdateVO;
 import com.lei.mall.service.UserService;
@@ -30,10 +30,8 @@ import org.redisson.api.RedissonClient;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static com.lei.mall.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -154,22 +152,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     @Override
     public UserLoginVO userlogin(UserLoginRequest userLoginRequest, HttpServletRequest request) {
-
-//        // 如果已经登录且账号匹配，直接返回用户信息
-//        Object sessionObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-//        if (sessionObj != null) {
-//            if (sessionObj instanceof User) {
-//                User sessionUser = (User) sessionObj;
-//                if (userLoginRequest.getUserAccount().equals(sessionUser.getUserAccount())) {
-//                    log.info("已经登录，直接返回：{}",sessionUser);
-//                    // 更新Redis缓存
-//                    String redisKey = "user:" + sessionUser.getId();
-//                    redisTemplate.opsForValue().set(redisKey, sessionUser, 30, TimeUnit.MINUTES);
-//                    // 返回脱敏用户信息
-//                    return this.getLoginUserVO(sessionUser);
-//                }
-//            }
-//        }
 
         //1、校验
         String account = userLoginRequest.getUserAccount();

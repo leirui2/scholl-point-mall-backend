@@ -1,11 +1,9 @@
 package com.lei.mall.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lei.mall.common.PageResult;
 import com.lei.mall.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lei.mall.model.user.*;
+import com.lei.mall.model.request.*;
 import com.lei.mall.model.vo.UserLoginVO;
 import com.lei.mall.model.vo.UserUpdateVO;
 
