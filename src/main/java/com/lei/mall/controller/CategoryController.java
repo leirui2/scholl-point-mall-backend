@@ -70,19 +70,6 @@ public class CategoryController {
     }
 
 
-    /**
-     * 管理员更新商品类别状态（启用/禁用）
-     * @param id 商品类别ID
-     * @param status 商品类别状态 0-正常 1-禁用
-     * @param request HTTP请求
-     * @return 是否更新成功
-     */
-    @PostMapping("/updateCategoryStatus")
-    public ApiResponse<Boolean> updateCategoryStatus(@RequestParam long id, @RequestParam int status, HttpServletRequest request) {
-        boolean result = categoryService.updateCategoryStatus(id, status, request);
-        return ResultUtils.success(result);
-    }
-
 
     /**
      * 管理员逻辑删除商品类别

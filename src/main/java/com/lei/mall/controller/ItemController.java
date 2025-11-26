@@ -5,9 +5,8 @@ import com.lei.mall.common.PageResult;
 import com.lei.mall.common.ResultUtils;
 import com.lei.mall.exception.BusinessException;
 import com.lei.mall.model.entity.Item;
-import com.lei.mall.model.request.ItemAddRequest;
-import com.lei.mall.model.request.ItemQueryRequest;
-import com.lei.mall.model.request.ItemUpdateRequest;
+import com.lei.mall.model.request.*;
+import com.lei.mall.model.vo.ItemCategoryVO;
 import com.lei.mall.service.ItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 商品信息接口
+ *
  * @author lei
  */
 @RestController
@@ -31,11 +31,12 @@ public class ItemController {
     /**
      * 添加商品信息
      * @param itemAddRequest 商品信息增加请求参数
+     * @param request HTTP请求
      * @return 商品信息ID
      */
     @PostMapping("/add")
-    public ApiResponse<Long> addItem(@RequestBody ItemAddRequest itemAddRequest,HttpServletRequest request) {
-        log.info("商品信息增加：{}", itemAddRequest);
+    public ApiResponse<Long> addItem(@RequestBody ItemAddRequest itemAddRequest, HttpServletRequest request) {
+        log.info("添加商品信息：{}", itemAddRequest);
         long id = itemService.addItem(itemAddRequest,request);
         return ResultUtils.success(id);
     }
@@ -65,9 +66,9 @@ public class ItemController {
      * @return 商品信息完整信息
      */
     @GetMapping("/getItemById")
-    public ApiResponse<Item> getItemById(long id, HttpServletRequest request) {
-        Item item = itemService.getItemById(id, request);
-        return ResultUtils.success(item);
+    public ApiResponse<ItemCategoryVO> getItemById(long id, HttpServletRequest request) {
+        ItemCategoryVO itemCategoryVO = itemService.getItemById(id, request);
+        return ResultUtils.success(itemCategoryVO);
     }
 
 
@@ -79,7 +80,7 @@ public class ItemController {
      * @return 是否更新成功
      */
     @PostMapping("/updateItemStatus")
-    public ApiResponse<Boolean> updateItemStatus(@RequestParam long id, @RequestParam int status, HttpServletRequest request) {
+    public ApiResponse<Boolean> updateItemStatus(long id, int status, HttpServletRequest request) {
         boolean result = itemService.updateItemStatus(id, status, request);
         return ResultUtils.success(result);
     }
@@ -92,7 +93,7 @@ public class ItemController {
      * @return 是否删除成功
      */
     @PostMapping("/deleteItem")
-    public ApiResponse<Boolean> deleteItem(@RequestParam long id, HttpServletRequest request) {
+    public ApiResponse<Boolean> deleteItem(long id, HttpServletRequest request) {
         boolean result = itemService.deleteItem(id, request);
         return ResultUtils.success(result);
     }
@@ -101,11 +102,23 @@ public class ItemController {
      * 管理员分页查询商品信息列表
      * @param itemQueryRequest 查询条件
      * @param request HTTP请求
-     * @return 用户列表分页结果
+     * @return 商品信息列表分页结果
      */
-    @PostMapping("/admin/listItemByPage")
+    @PostMapping("/listItemByPage")
     public ApiResponse<PageResult<Item>> listItemByPage(@RequestBody ItemQueryRequest itemQueryRequest, HttpServletRequest request) {
         PageResult<Item> pageResult = itemService.listItemByPage(itemQueryRequest, request);
+        return ResultUtils.success(pageResult);
+    }
+
+    /**
+     * 管理员分页查询商品和类别信息列表
+     * @param itemQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 商品和类别信息列表分页结果
+     */
+    @PostMapping("/listItemCategoryByPage")
+    public ApiResponse<PageResult<ItemCategoryVO>> listItemCategoryByPage(@RequestBody ItemQueryRequest itemQueryRequest, HttpServletRequest request) {
+        PageResult<ItemCategoryVO> pageResult = itemService.listItemCategoryByPage(itemQueryRequest, request);
         return ResultUtils.success(pageResult);
     }
 }

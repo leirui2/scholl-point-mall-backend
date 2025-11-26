@@ -32,11 +32,6 @@ public class Category implements Serializable {
     @TableField(value = "description")
     private String description;
 
-    /**
-     * 状态：0启用   -    1禁用，
-     */
-    @TableField(value = "status")
-    private Integer status;
 
     /**
      * 逻辑删除标志：0-未删除，1-已删除

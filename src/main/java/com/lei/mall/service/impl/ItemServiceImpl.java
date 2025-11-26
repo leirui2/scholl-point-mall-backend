@@ -1,6 +1,7 @@
 package com.lei.mall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.mall.common.ErrorCode;
@@ -9,9 +10,8 @@ import com.lei.mall.exception.BusinessException;
 import com.lei.mall.mapper.UserMapper;
 import com.lei.mall.model.entity.Item;
 import com.lei.mall.model.entity.User;
-import com.lei.mall.model.request.ItemAddRequest;
-import com.lei.mall.model.request.ItemQueryRequest;
-import com.lei.mall.model.request.ItemUpdateRequest;
+import com.lei.mall.model.request.*;
+import com.lei.mall.model.vo.ItemCategoryVO;
 import com.lei.mall.model.vo.UserLoginVO;
 import com.lei.mall.service.ItemService;
 import com.lei.mall.mapper.ItemMapper;
@@ -137,10 +137,10 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
      * @return 商品信息完整信息
      */
     @Override
-    public Item getItemById(long id, HttpServletRequest request) {
+    public ItemCategoryVO getItemById(long id, HttpServletRequest request) {
         //校验权限
         checkAdminPermission(request);
-        return this.baseMapper.selectById(id);
+        return this.baseMapper.selectVoById(id);
     }
 
     /**
@@ -256,6 +256,38 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         return pageResult;
     }
 
+    /**
+     * 管理员分页查询商品和类别信息列表
+     * @param itemQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 商品和类别信息列表分页结果
+     */
+    @Override
+    public PageResult<ItemCategoryVO> listItemCategoryByPage(ItemQueryRequest itemQueryRequest, HttpServletRequest request) {
+        //校验权限
+        checkAdminPermission(request);
+
+        // 验证分页参数
+        if (itemQueryRequest.getCurrent() <= 0) {
+            itemQueryRequest.setCurrent(1);
+        }
+        if (itemQueryRequest.getPageSize() <= 0 || itemQueryRequest.getPageSize() > 100) {
+            itemQueryRequest.setPageSize(10);
+        }
+
+        // 分页查询
+        Page<ItemCategoryVO> page = new Page<>(itemQueryRequest.getCurrent(), itemQueryRequest.getPageSize());
+        IPage<ItemCategoryVO> resultPage = this.baseMapper.selectItemCategoryVoByPage(page, itemQueryRequest);
+
+        // 构造分页结果
+        PageResult<ItemCategoryVO> pageResult = new PageResult<>();
+        pageResult.setRecords(resultPage.getRecords());
+        pageResult.setTotal(resultPage.getTotal());
+        pageResult.setCurrent(resultPage.getCurrent());
+        pageResult.setSize(resultPage.getSize());
+
+        return pageResult;
+    }
 
     /**
      * 检查用户是否有管理员权限
@@ -278,7 +310,3 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
 
     }
 }
-
-
-
-

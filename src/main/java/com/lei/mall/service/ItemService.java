@@ -2,10 +2,11 @@ package com.lei.mall.service;
 
 import com.lei.mall.common.PageResult;
 import com.lei.mall.model.entity.Item;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.lei.mall.model.request.ItemAddRequest;
 import com.lei.mall.model.request.ItemQueryRequest;
 import com.lei.mall.model.request.ItemUpdateRequest;
+import com.lei.mall.model.vo.ItemCategoryVO;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,13 +22,12 @@ public interface ItemService extends IService<Item> {
      * @param itemAddRequest 商品信息增加请求参数
      * @return 商品信息ID
      */
-    long addItem(ItemAddRequest itemAddRequest,HttpServletRequest request);
+    long addItem(ItemAddRequest itemAddRequest, HttpServletRequest request);
 
     /**
      * 商品信息信息修改
      */
     Item updateItem(ItemUpdateRequest itemUpdateRequest, HttpServletRequest request);
-
 
     /**
      * 管理员根据ID查询商品信息完整信息
@@ -35,7 +35,7 @@ public interface ItemService extends IService<Item> {
      * @param request HTTP请求
      * @return 商品信息完整信息
      */
-    Item getItemById(long id, HttpServletRequest request);
+    ItemCategoryVO getItemById(long id, HttpServletRequest request);
 
     /**
      * 管理员更新商品信息状态（启用/禁用）
@@ -61,4 +61,12 @@ public interface ItemService extends IService<Item> {
      * @return 用户列表分页结果
      */
     PageResult<Item> listItemByPage(ItemQueryRequest itemQueryRequest, HttpServletRequest request);
+
+    /**
+     * 管理员分页查询商品和类别信息列表
+     * @param itemQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 商品和类别信息列表分页结果
+     */
+    PageResult<ItemCategoryVO> listItemCategoryByPage(ItemQueryRequest itemQueryRequest, HttpServletRequest request);
 }

@@ -14,15 +14,103 @@
             <result property="stock" column="stock" />
             <result property="unit" column="unit" />
             <result property="status" column="status" />
-            <result property="sortorder" column="sortOrder" />
             <result property="isDelete" column="isDelete" />
             <result property="createtime" column="createTime" />
             <result property="updatetime" column="updateTime" />
     </resultMap>
 
+    <resultMap id="ItemCategoryVOResultMap" type="com.lei.mall.model.vo.ItemCategoryVO">
+        <id property="id" column="id"/>
+        <result property="categoryid" column="categoryId"/>
+        <result property="name" column="itemName"/>
+        <result property="description" column="itemDescription"/>
+        <result property="imageurl" column="imageUrl"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="unit" column="unit"/>
+        <result property="status" column="status"/>
+        <result property="categoryName" column="categoryName"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
         id,categoryId,name,description,imageUrl,price,
-        stock,unit,status,sortOrder,isDelete,
-        createTime,updateTime
+        stock,unit,status,isDelete,createTime,updateTime
     </sql>
+
+    <select id="selectVoById" resultType="com.lei.mall.model.vo.ItemCategoryVO">
+        SELECT
+            i.id,
+            i.categoryId,
+            c.name AS categoryName,
+            i.name,
+            i.description,
+            i.imageUrl,
+            i.price,
+            i.stock,
+            i.unit,
+            i.status,
+            i.createTime,
+            i.updateTime
+        FROM item i
+                 LEFT JOIN category c ON i.categoryId = c.id
+        WHERE i.isDelete = 0 AND i.id = #{id}
+        ORDER BY i.createTime DESC
+    </select>
+    
+    <select id="selectItemCategoryVoByPage" resultMap="ItemCategoryVOResultMap">
+        SELECT 
+            i.id,
+            i.categoryId,
+            i.name AS itemName,
+            i.description AS itemDescription,
+            i.imageUrl,
+            i.price,
+            i.stock,
+            i.unit,
+            i.status,
+            c.name AS categoryName,
+            i.createTime,
+            i.updateTime
+        FROM item i
+        LEFT JOIN category c ON i.categoryId = c.id
+        WHERE i.isDelete = 0
+        <if test="query.name != null and query.name != ''">
+            AND i.name LIKE CONCAT('%', #{query.name}, '%')
+        </if>
+        <if test="query.categoryid != null and query.categoryid > 0">
+            AND i.categoryId = #{query.categoryid}
+        </if>
+        <if test="query.categoryName != null and query.categoryName != ''">
+            AND c.name LIKE CONCAT('%', #{query.categoryName}, '%')
+        </if>
+        <if test="query.minPrice != null and query.minPrice.compareTo(@java.math.BigDecimal@ZERO) > 0">
+            <if test="query.maxPrice != null and query.maxPrice.compareTo(@java.math.BigDecimal@ZERO) > 0">
+                AND i.price BETWEEN #{query.minPrice} AND #{query.maxPrice}
+            </if>
+            <if test="query.maxPrice == null or query.maxPrice.compareTo(@java.math.BigDecimal@ZERO) &lt;= 0">
+                AND i.price >= #{query.minPrice}
+            </if>
+        </if>
+        <if test="query.minPrice == null or query.minPrice.compareTo(@java.math.BigDecimal@ZERO) &lt;= 0">
+            <if test="query.maxPrice != null and query.maxPrice.compareTo(@java.math.BigDecimal@ZERO) > 0">
+                AND i.price &lt;= #{query.maxPrice}
+            </if>
+        </if>
+        <if test="query.minStock != null and query.minStock > 0">
+            <if test="query.maxStock != null and query.maxStock > 0">
+                AND i.stock BETWEEN #{query.minStock} AND #{query.maxStock}
+            </if>
+            <if test="query.maxStock == null or query.maxStock &lt;= 0">
+                AND i.stock >= #{query.minStock}
+            </if>
+        </if>
+        <if test="query.minStock == null or query.minStock &lt;= 0">
+            <if test="query.maxStock != null and query.maxStock > 0">
+                AND i.stock &lt;= #{query.maxStock}
+            </if>
+        </if>
+        ORDER BY i.createTime DESC
+    </select>
 </mapper>

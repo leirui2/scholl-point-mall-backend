@@ -38,15 +38,6 @@ public interface CategoryService extends IService<Category> {
     Category getCategoryById(long id, HttpServletRequest request);
 
     /**
-     * 管理员更新商品类别状态（启用/禁用）
-     * @param id 商品类别ID
-     * @param status 商品类别状态 0-正常 1-禁用
-     * @param request HTTP请求
-     * @return 是否更新成功
-     */
-    boolean updateCategoryStatus(long id, int status, HttpServletRequest request);
-
-    /**
      * 管理员逻辑删除商品类别
      * @param id 商品类别ID
      * @param request HTTP请求

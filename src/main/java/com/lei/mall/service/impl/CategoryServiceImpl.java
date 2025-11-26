@@ -8,6 +8,7 @@ import com.lei.mall.common.PageResult;
 import com.lei.mall.exception.BusinessException;
 import com.lei.mall.mapper.UserMapper;
 import com.lei.mall.model.entity.Category;
+import com.lei.mall.model.entity.Item;
 import com.lei.mall.model.entity.User;
 import com.lei.mall.model.request.CategoryAddRequest;
 import com.lei.mall.model.request.CategoryQueryRequest;
@@ -15,6 +16,7 @@ import com.lei.mall.model.request.CategoryUpdateRequest;
 import com.lei.mall.model.vo.UserLoginVO;
 import com.lei.mall.service.CategoryService;
 import com.lei.mall.mapper.CategoryMapper;
+import com.lei.mall.service.ItemService;
 import com.lei.mall.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -37,9 +39,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
     @Resource
     private UserService userService;
 
-
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private ItemService itemService;
 
     /**
      * 添加商品类别
@@ -105,26 +109,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         return this.baseMapper.selectById(id);
     }
 
-    /**
-     * 管理员更新商品类别状态（启用/禁用）
-     * @param id 商品类别ID
-     * @param status 商品类别状态 0-正常 1-禁用
-     * @param request HTTP请求
-     * @return 是否更新成功
-     */
-    @Override
-    public boolean updateCategoryStatus(long id, int status, HttpServletRequest request) {
-        //校验权限
-        checkAdminPermission(request);
-        Category category = new Category();
-        category.setId(id);
-        category.setStatus(status);
-        int updateById = this.baseMapper.updateById(category);
-        if (updateById == 0){
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR.getCode(), "修改失败，异常错误");
-        }
-        return true;
-    }
 
     /**
      * 管理员逻辑删除商品类别
@@ -141,6 +125,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         if (category == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR.getCode(), "类别不存在");
         }
+
+        QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("categoryId",id);
+        if (itemService.count(queryWrapper) > 0) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR.getCode(), "该类别下有商品，请先删除商品");
+        }
+
         // 使用MyBatis-Plus的removeById方法执行逻辑删除
         return this.removeById(id);
     }
@@ -174,10 +165,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         // 构建动态查询条件
         if (StringUtils.isNotBlank(categoryQueryRequest.getName())) {
             queryWrapper.like("name", categoryQueryRequest.getName());
-        }
-
-        if (categoryQueryRequest.getStatus() != null) {
-            queryWrapper.eq("status", categoryQueryRequest.getStatus());
         }
 
         // 分页查询

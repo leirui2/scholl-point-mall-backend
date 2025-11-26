@@ -20,11 +20,5 @@ public class CategoryQueryRequest extends PageRequest implements Serializable {
     private String name;
 
 
-    /**
-     * 状态：0-禁用，1-启用
-     */
-    private Integer status;
-
-
     private static final long serialVersionUID = 1L;
 }

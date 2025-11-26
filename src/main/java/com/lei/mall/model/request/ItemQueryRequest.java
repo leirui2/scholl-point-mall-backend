@@ -27,6 +27,11 @@ public class ItemQueryRequest extends PageRequest implements Serializable {
     private String name;
 
     /**
+     * 类别名称
+     */
+    private String categoryName;
+
+    /**
      * 商品描述
      */
     private String description;
