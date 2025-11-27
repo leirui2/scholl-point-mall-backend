@@ -29,6 +29,9 @@ public class FileDetailController {
      */
     @PostMapping("/upload2")
     public String upload2(MultipartFile file) {
+        if (file == null){
+            throw new RuntimeException("文件为空");
+        }
         FileInfo fileInfo = fileStorageService.of(file)
                 .setPath("upload/") //保存到相对路径下，为了方便管理，不需要可以不写
                 //.setSaveFilename("image.jpg") //设置保存的文件名，不需要可以不写，会随机生成
