@@ -65,7 +65,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         category.setName(categoryAddRequest.getName());
         category.setDescription(categoryAddRequest.getDescription());
 
+        //判断是否有同样名称
+        QueryWrapper<Category> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("name",category.getName());
+        long cnt = this.count(queryWrapper);
+        if(cnt > 0){
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR.getCode(), "添加失败，已有该名称的商品类别！");
+        }
+
         boolean saveResult = this.save(category);
+
         if (!saveResult) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR.getCode(), "添加失败，数据库错误");
         }
