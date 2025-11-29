@@ -1,5 +1,6 @@
 package com.lei.mall.model.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -57,6 +58,16 @@ public class UserLoginVO implements Serializable {
      * 用户状态： int  0 - 正常    1-ban
      */
     private Integer userStatus;
+
+    /**
+     * 用户角色: 0 - 普通用户 1 - 管理员
+     */
+    private Integer userRole;
+
+    /**
+     * 积分
+     */
+    private Integer points;
 
     /**
      * 创建时间

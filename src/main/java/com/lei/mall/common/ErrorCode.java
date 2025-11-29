@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 /**
  * 自定义错误码
- *
- *
- *
  * @author lei
  */
 public enum ErrorCode implements Serializable {

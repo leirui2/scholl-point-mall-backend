@@ -117,4 +117,5 @@ public interface UserService extends IService<User> {
      * 管理员修改用户信息
      */
     UserUpdateVO updateUserByAdmin(UserUpdateRequest userUpdateRequest, HttpServletRequest request);
+
 }

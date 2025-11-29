@@ -75,6 +75,13 @@ public class User implements Serializable {
     private Integer userStatus;
 
     /**
+     * 剩余积分
+     * 初始值为0
+     */
+    @TableField(value = "points")
+    private Integer points;
+
+    /**
      * 用户角色: 0 - 普通用户 1 - 管理员
      */
     @TableField(value = "userRole")

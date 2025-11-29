@@ -138,8 +138,9 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
      */
     @Override
     public ItemCategoryVO getItemById(long id, HttpServletRequest request) {
-        //校验权限
-        checkAdminPermission(request);
+        if (request == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "请求参数错误");
+        }
         return this.baseMapper.selectVoById(id);
     }
 
@@ -214,15 +215,15 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
             queryWrapper.like("description", itemQueryRequest.getDescription());
         }
         // 价格区间查询 - 只有当值大于0时才进行查询
-        if (itemQueryRequest.getMinPrice() != null && itemQueryRequest.getMinPrice().compareTo(BigDecimal.ZERO) > 0) {
-            if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice().compareTo(BigDecimal.ZERO) > 0) {
+        if (itemQueryRequest.getMinPrice() != null && itemQueryRequest.getMinPrice() > 0) {
+            if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice() > 0) {
                 // 如果最小价格和最大价格都大于0，则查询价格在区间内的商品
                 queryWrapper.between("price", itemQueryRequest.getMinPrice(), itemQueryRequest.getMaxPrice());
             } else {
                 // 如果只有最小价格大于0，则查询价格大于等于最小价格的商品
                 queryWrapper.ge("price", itemQueryRequest.getMinPrice());
             }
-        } else if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice().compareTo(BigDecimal.ZERO) > 0) {
+        } else if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice() > 0) {
             // 如果只有最大价格大于0，则查询价格小于等于最大价格的商品
             queryWrapper.le("price", itemQueryRequest.getMaxPrice());
         }

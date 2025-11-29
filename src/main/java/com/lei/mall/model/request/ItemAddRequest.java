@@ -36,7 +36,7 @@ public class ItemAddRequest implements Serializable {
     /**
      * 积分价格
      */
-    private BigDecimal price;
+    private Integer price;
 
     /**
      * 库存数量

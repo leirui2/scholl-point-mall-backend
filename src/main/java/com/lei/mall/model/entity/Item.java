@@ -49,7 +49,7 @@ public class Item implements Serializable {
      * 积分价格
      */
     @TableField(value = "price")
-    private BigDecimal price;
+    private Integer price;
 
     /**
      * 库存数量

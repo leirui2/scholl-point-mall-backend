@@ -15,6 +15,7 @@ import com.lei.mall.model.entity.UserActivity;
 import com.lei.mall.model.request.*;
 import com.lei.mall.model.vo.UserLoginVO;
 import com.lei.mall.model.vo.UserUpdateVO;
+import com.lei.mall.service.ItemService;
 import com.lei.mall.service.UserService;
 import com.lei.mall.mapper.UserMapper;
 import com.lei.mall.utils.IPUtil;
@@ -61,6 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Resource
     private UserActivityMapper userActivityMapper;
+
 
     /**
      * 用户注册
@@ -809,5 +811,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         BeanUtils.copyProperties(targetUser,userUpdateVO);
         return userUpdateVO;
     }
+    
+
 
 }
