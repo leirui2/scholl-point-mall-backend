@@ -11,6 +11,7 @@
             <result property="description" column="description" />
             <result property="imageurl" column="imageUrl" />
             <result property="price" column="price" />
+            <result property="order_count" column="order_count"/>
             <result property="stock" column="stock" />
             <result property="unit" column="unit" />
             <result property="status" column="status" />
@@ -28,6 +29,7 @@
         <result property="price" column="price"/>
         <result property="stock" column="stock"/>
         <result property="unit" column="unit"/>
+        <result property="order_count" column="order_count"/>
         <result property="status" column="status"/>
         <result property="categoryName" column="categoryName"/>
         <result property="createTime" column="createTime"/>
@@ -36,7 +38,7 @@
 
     <sql id="Base_Column_List">
         id,categoryId,name,description,imageUrl,price,
-        stock,unit,status,isDelete,createTime,updateTime
+        stock,unit,status,order_count,isDelete,createTime,updateTime
     </sql>
 
     <select id="selectVoById" resultType="com.lei.mall.model.vo.ItemCategoryVO">
@@ -49,6 +51,7 @@
             i.imageUrl,
             i.price,
             i.stock,
+            i.order_count,
             i.unit,
             i.status,
             i.createTime,
@@ -67,6 +70,7 @@
             i.description AS itemDescription,
             i.imageUrl,
             i.price,
+            i.order_count,
             i.stock,
             i.unit,
             i.status,
@@ -85,16 +89,16 @@
         <if test="query.categoryName != null and query.categoryName != ''">
             AND c.name LIKE CONCAT('%', #{query.categoryName}, '%')
         </if>
-        <if test="query.minPrice != null and query.minPrice.compareTo(@java.math.BigDecimal@ZERO) > 0">
-            <if test="query.maxPrice != null and query.maxPrice.compareTo(@java.math.BigDecimal@ZERO) > 0">
+        <if test="query.minPrice != null and query.minPrice > 0">
+            <if test="query.maxPrice != null and query.maxPrice > 0">
                 AND i.price BETWEEN #{query.minPrice} AND #{query.maxPrice}
             </if>
-            <if test="query.maxPrice == null or query.maxPrice.compareTo(@java.math.BigDecimal@ZERO) &lt;= 0">
+            <if test="query.maxPrice == null or query.maxPrice &lt;= 0">
                 AND i.price >= #{query.minPrice}
             </if>
         </if>
-        <if test="query.minPrice == null or query.minPrice.compareTo(@java.math.BigDecimal@ZERO) &lt;= 0">
-            <if test="query.maxPrice != null and query.maxPrice.compareTo(@java.math.BigDecimal@ZERO) > 0">
+        <if test="query.minPrice == null or query.minPrice &lt;= 0">
+            <if test="query.maxPrice != null and query.maxPrice > 0">
                 AND i.price &lt;= #{query.maxPrice}
             </if>
         </if>

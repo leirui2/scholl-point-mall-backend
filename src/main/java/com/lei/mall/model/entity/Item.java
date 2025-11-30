@@ -46,6 +46,12 @@ public class Item implements Serializable {
     private String imageurl;
 
     /**
+     * 产生订单数量
+     */
+    @TableField(value = "order_count")
+    private Integer order_count;
+
+    /**
      * 积分价格
      */
     @TableField(value = "price")
