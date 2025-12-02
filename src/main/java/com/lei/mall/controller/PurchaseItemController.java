@@ -4,10 +4,8 @@ import com.lei.mall.common.ApiResponse;
 import com.lei.mall.common.PageResult;
 import com.lei.mall.common.ResultUtils;
 import com.lei.mall.exception.BusinessException;
-import com.lei.mall.model.entity.User;
 import com.lei.mall.model.request.PurchaseItemRequest;
 import com.lei.mall.model.request.PurchaseRecordQueryRequest;
-import com.lei.mall.model.request.UserQueryRequest;
 import com.lei.mall.model.vo.PurchaseRecordListVO;
 import com.lei.mall.service.PurchaseRecordService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author lei
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/purchase_record")
 @Slf4j
 public class PurchaseItemController {
 
@@ -53,6 +51,7 @@ public class PurchaseItemController {
         PageResult<PurchaseRecordListVO> pageResult = purchaseRecordService.listAllRecord(purchaseRecordQueryRequest, request);
         return ResultUtils.success(pageResult);
     }
+
 
 
 }

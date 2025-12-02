@@ -7,6 +7,7 @@ import com.lei.mall.exception.BusinessException;
 import com.lei.mall.model.entity.Item;
 import com.lei.mall.model.request.*;
 import com.lei.mall.model.vo.ItemCategoryVO;
+import com.lei.mall.model.vo.ItemVO;
 import com.lei.mall.service.ItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -97,6 +98,31 @@ public class ItemController {
         boolean result = itemService.deleteItem(id, request);
         return ResultUtils.success(result);
     }
+
+    /**
+     * 普通用户分页查询商品信息脱敏列表
+     * @param itemQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 商品信息列表分页结果
+     */
+    @PostMapping("/listItemByPageUser")
+    public ApiResponse<PageResult<ItemVO>> listItemByPageUser(@RequestBody ItemQueryRequest itemQueryRequest, HttpServletRequest request) {
+        PageResult<ItemVO> pageResult = itemService.listItemByPageUser(itemQueryRequest, request);
+        return ResultUtils.success(pageResult);
+    }
+
+    /**
+     * 获取热门商品列表推荐（前30名）
+     * @param hotItemQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 商品信息列表分页结果
+     */
+    @PostMapping("/hotListItemByPage")
+    public ApiResponse<PageResult<ItemVO>> hotListItemByPage(@RequestBody HotItemQueryRequest hotItemQueryRequest , HttpServletRequest request) {
+        PageResult<ItemVO> pageResult = itemService.hotListItemByPage(hotItemQueryRequest, request);
+        return ResultUtils.success(pageResult);
+    }
+
 
     /**
      * 管理员分页查询商品信息列表

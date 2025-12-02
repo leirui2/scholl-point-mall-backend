@@ -8,6 +8,7 @@ import com.lei.mall.common.ErrorCode;
 import com.lei.mall.common.PageResult;
 import com.lei.mall.common.ResultUtils;
 import com.lei.mall.exception.BusinessException;
+import com.lei.mall.mapper.ItemMapper;
 import com.lei.mall.model.entity.Item;
 import com.lei.mall.model.entity.PurchaseRecord;
 import com.lei.mall.model.entity.User;
@@ -47,6 +48,9 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
     @Resource
     private ItemService itemService;
 
+    @Resource
+    private ItemMapper itemMapper;
+
 
     @Resource
     private UserService userService;
@@ -71,7 +75,7 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
         // 获取当前用户
         UserLoginVO loginUser = userService.getLoginUser(request);
         //获取当前商品
-        Item item = itemService.getById(itemId);
+        Item item = itemMapper.selectById(itemId);
 
         // 检查商品状态 // 假设0表示上架状态
         if (item == null) {
@@ -111,8 +115,8 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
             userService.updateById(user);
 
             //修改商品剩余数量
-            // 获取最新的商品数据进行更新
-            Item latestItem = itemService.getById(itemId);
+            // 使用自定义xml获取最新的商品数据进行更新
+            Item latestItem = itemMapper.selectById(itemId);
             if (latestItem == null) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "商品不存在");
             }

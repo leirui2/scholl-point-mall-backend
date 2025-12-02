@@ -2,11 +2,13 @@ package com.lei.mall.service;
 
 import com.lei.mall.common.PageResult;
 import com.lei.mall.model.entity.Item;
+import com.lei.mall.model.request.HotItemQueryRequest;
 import com.lei.mall.model.request.ItemAddRequest;
 import com.lei.mall.model.request.ItemQueryRequest;
 import com.lei.mall.model.request.ItemUpdateRequest;
 import com.lei.mall.model.vo.ItemCategoryVO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lei.mall.model.vo.ItemVO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -69,4 +71,20 @@ public interface ItemService extends IService<Item> {
      * @return 商品和类别信息列表分页结果
      */
     PageResult<ItemCategoryVO> listItemCategoryByPage(ItemQueryRequest itemQueryRequest, HttpServletRequest request);
+
+    /**
+     * 普通用户分页查询商品信息列表
+     * @param itemQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 商品信息列表分页结果
+     */
+    PageResult<ItemVO> listItemByPageUser(ItemQueryRequest itemQueryRequest, HttpServletRequest request);
+
+    /**
+     * 获取热门商品列表推荐（前30名）
+     * @param hotItemQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 商品信息列表分页结果
+     */
+    PageResult<ItemVO> hotListItemByPage(HotItemQueryRequest hotItemQueryRequest, HttpServletRequest request);
 }

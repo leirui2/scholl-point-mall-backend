@@ -20,6 +20,13 @@
             <result property="updatetime" column="updateTime" />
     </resultMap>
 
+    <select id="selectById" resultMap="BaseResultMap">
+        select 
+        <include refid="Base_Column_List" />
+        from item
+        where id = #{id}
+    </select>
+
     <resultMap id="ItemCategoryVOResultMap" type="com.lei.mall.model.vo.ItemCategoryVO">
         <id property="id" column="id"/>
         <result property="categoryid" column="categoryId"/>

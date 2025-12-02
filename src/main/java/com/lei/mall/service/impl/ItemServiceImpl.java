@@ -12,17 +12,20 @@ import com.lei.mall.model.entity.Item;
 import com.lei.mall.model.entity.User;
 import com.lei.mall.model.request.*;
 import com.lei.mall.model.vo.ItemCategoryVO;
+import com.lei.mall.model.vo.ItemVO;
 import com.lei.mall.model.vo.UserLoginVO;
 import com.lei.mall.service.ItemService;
 import com.lei.mall.mapper.ItemMapper;
 import com.lei.mall.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -287,6 +290,143 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         pageResult.setTotal(resultPage.getTotal());
         pageResult.setCurrent(resultPage.getCurrent());
         pageResult.setSize(resultPage.getSize());
+
+        return pageResult;
+    }
+
+
+    /**
+     * 普通用户分页查询商品信息列表
+     * @param itemQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 商品信息列表分页结果
+     */
+    @Override
+    public PageResult<ItemVO> listItemByPageUser(ItemQueryRequest itemQueryRequest, HttpServletRequest request) {
+        if (request == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "请求参数错误");
+        }
+        // 验证分页参数
+        if (itemQueryRequest.getCurrent() <= 0) {
+            itemQueryRequest.setCurrent(1);
+        }
+        if (itemQueryRequest.getPageSize() <= 0 || itemQueryRequest.getPageSize() > 100) {
+            itemQueryRequest.setPageSize(10);
+        }
+        // 构造查询条件
+        QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
+
+        // 只查询未删除的类别
+        queryWrapper.eq("isDelete", 0);
+        queryWrapper.orderByDesc("createTime");
+        if (StringUtils.isNotBlank(itemQueryRequest.getName())) {
+            queryWrapper.like("name", itemQueryRequest.getName());
+        }
+        if (StringUtils.isNotBlank(itemQueryRequest.getDescription())){
+            queryWrapper.like("description", itemQueryRequest.getDescription());
+        }
+        // 价格区间查询 - 只有当值大于0时才进行查询
+        if (itemQueryRequest.getMinPrice() != null && itemQueryRequest.getMinPrice() > 0) {
+            if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice() > 0) {
+                // 如果最小价格和最大价格都大于0，则查询价格在区间内的商品
+                queryWrapper.between("price", itemQueryRequest.getMinPrice(), itemQueryRequest.getMaxPrice());
+            } else {
+                // 如果只有最小价格大于0，则查询价格大于等于最小价格的商品
+                queryWrapper.ge("price", itemQueryRequest.getMinPrice());
+            }
+        } else if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice() > 0) {
+            // 如果只有最大价格大于0，则查询价格小于等于最大价格的商品
+            queryWrapper.le("price", itemQueryRequest.getMaxPrice());
+        }
+
+        //库存区间查询 - 只有当值大于0时才进行查询
+        if (itemQueryRequest.getMinStock() != null && itemQueryRequest.getMinStock() > 0) {
+            if (itemQueryRequest.getMaxStock() != null && itemQueryRequest.getMaxStock() > 0) {
+                queryWrapper.between("stock", itemQueryRequest.getMinStock(), itemQueryRequest.getMaxStock());
+            } else {
+                queryWrapper.ge("stock", itemQueryRequest.getMinStock());
+            }
+        } else if (itemQueryRequest.getMaxStock() != null && itemQueryRequest.getMaxStock() > 0) {
+            queryWrapper.le("stock", itemQueryRequest.getMaxStock());
+        }
+
+        // 如果有类别ID 就查询
+        queryWrapper.eq(itemQueryRequest.getCategoryid() != null && itemQueryRequest.getCategoryid() > 0, "categoryId", itemQueryRequest.getCategoryid());
+
+        // 分页查询
+        Page<Item> page = new Page<>(itemQueryRequest.getCurrent(), itemQueryRequest.getPageSize());
+        this.page(page, queryWrapper);
+
+        // 构造分页结果
+        PageResult<ItemVO> pageResult = new PageResult<>();
+        // 转换实体对象为 VO 对象
+        List<ItemVO> voList = new ArrayList<>();
+        for (Item item : page.getRecords()) {
+            ItemVO vo = new ItemVO();
+            BeanUtils.copyProperties(item, vo);
+            voList.add(vo);
+        }
+
+        pageResult.setRecords(voList);
+        pageResult.setTotal(page.getTotal());
+        pageResult.setCurrent(page.getCurrent());
+        pageResult.setSize(page.getSize());
+
+        return pageResult;
+    }
+
+    /**
+     * 获取热门商品列表推荐（前N名）
+     * @param hotItemQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 商品信息列表分页结果
+     */
+    @Override
+    public PageResult<ItemVO> hotListItemByPage(HotItemQueryRequest hotItemQueryRequest, HttpServletRequest request) {
+        if (request == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "请求参数错误");
+        }
+        // 验证分页参数
+        if (hotItemQueryRequest.getCurrent() <= 0) {
+            hotItemQueryRequest.setCurrent(1);
+        }
+        if (hotItemQueryRequest.getPageSize() <= 0 || hotItemQueryRequest.getPageSize() > 100) {
+            hotItemQueryRequest.setPageSize(6);
+        }
+        // 构造查询条件
+        QueryWrapper<Item> queryWrapper = new QueryWrapper<>();
+
+        // 只查询未删除的商品
+        queryWrapper.eq("isDelete", 0);
+        // 按销量降序排列（order_count字段）
+        queryWrapper.orderByDesc("order_count");
+
+        // 分页查询
+        Page<Item> page = new Page<>(hotItemQueryRequest.getCurrent(), hotItemQueryRequest.getPageSize());
+        this.page(page, queryWrapper);
+
+        // 如果设置了num参数，则只取前num个商品
+        List<Item> records = page.getRecords();
+        if (hotItemQueryRequest.getNum() != null && hotItemQueryRequest.getNum() > 0 
+                && hotItemQueryRequest.getNum() < records.size()) {
+            records = records.subList(0, hotItemQueryRequest.getNum().intValue());
+            page.setRecords(records);
+        }
+
+        // 构造分页结果
+        PageResult<ItemVO> pageResult = new PageResult<>();
+        // 转换实体对象为 VO 对象
+        List<ItemVO> voList = new ArrayList<>();
+        for (Item item : page.getRecords()) {
+            ItemVO vo = new ItemVO();
+            BeanUtils.copyProperties(item, vo);
+            voList.add(vo);
+        }
+
+        pageResult.setRecords(voList);
+        pageResult.setTotal(page.getTotal());
+        pageResult.setCurrent(page.getCurrent());
+        pageResult.setSize(page.getSize());
 
         return pageResult;
     }

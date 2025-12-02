@@ -19,6 +19,13 @@ import org.apache.ibatis.annotations.Param;
 public interface ItemMapper extends BaseMapper<Item> {
 
     /**
+     * 根据ID查询商品信息
+     * @param id 商品信息ID
+     * @return 商品信息
+     */
+    Item selectById(Long id);
+
+    /**
      * 管理员根据ID查询商品信息完整信息
      * @param id 商品信息ID
      * @return 商品信息完整信息VO
