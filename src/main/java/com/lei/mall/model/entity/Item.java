@@ -49,7 +49,7 @@ public class Item implements Serializable {
      * 产生订单数量
      */
     @TableField(value = "order_count")
-    private Integer order_count;
+    private Long order_count;
 
     /**
      * 积分价格

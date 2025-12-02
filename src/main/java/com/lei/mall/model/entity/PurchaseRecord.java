@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 public class PurchaseRecord implements Serializable {
     /**
-     * 
+     * ID
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
@@ -25,6 +25,18 @@ public class PurchaseRecord implements Serializable {
      */
     @TableField(value = "itemId")
     private Long itemId;
+
+    /**
+     * 订单号
+     */
+    @TableField(value = "orderNumber")
+    private String orderNumber;
+
+    /**
+     * 商品名称
+     */
+    @TableField(value = "itemName")
+    private String itemName;
 
     /**
      * 用户ID
@@ -39,22 +51,15 @@ public class PurchaseRecord implements Serializable {
     @TableField(value = "isDelete")
     private Integer isDelete;
 
-
     /**
      * 下单数量
      */
     @TableField(value = "num")
     private Integer num;
 
-    /**
-     * 
-     */
     @TableField(value = "createTime")
     private Date createtime;
 
-    /**
-     * 
-     */
     @TableField(value = "updateTime")
     private Date updatetime;
 

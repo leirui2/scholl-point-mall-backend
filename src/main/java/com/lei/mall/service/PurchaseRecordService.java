@@ -1,8 +1,12 @@
 package com.lei.mall.service;
 
+import com.lei.mall.common.ApiResponse;
+import com.lei.mall.common.PageResult;
 import com.lei.mall.model.entity.PurchaseRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lei.mall.model.request.PurchaseItemRequest;
+import com.lei.mall.model.request.PurchaseRecordQueryRequest;
+import com.lei.mall.model.vo.PurchaseRecordListVO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,5 +21,11 @@ public interface PurchaseRecordService extends IService<PurchaseRecord> {
      * 下单商品
      * @param purchaseItemRequest 下单请求
      */
-    Boolean purchaseItem(PurchaseItemRequest purchaseItemRequest, HttpServletRequest request);
+    ApiResponse<Boolean> purchaseItem(PurchaseItemRequest purchaseItemRequest, HttpServletRequest request);
+
+    /**
+     * 分页查询当前用户是的所有下单记录
+     * @param purchaseRecordQueryRequest 已下单查询请求体
+     */
+    PageResult<PurchaseRecordListVO> listAllRecord(PurchaseRecordQueryRequest purchaseRecordQueryRequest, HttpServletRequest request);
 }

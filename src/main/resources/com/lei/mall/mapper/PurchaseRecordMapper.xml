@@ -6,14 +6,17 @@
 
     <resultMap id="BaseResultMap" type="com.lei.mall.model.entity.PurchaseRecord">
             <id property="id" column="id" />
-            <result property="itemid" column="itemId" />
-            <result property="userid" column="userId" />
+            <result property="itemId" column="itemId" />
+            <result property="orderNumber" column="orderNumber" />
+            <result property="itemName" column="itemName" />
+            <result property="userId" column="userId" />
+            <result property="num" column="num" />
             <result property="isDelete" column="isDelete" />
             <result property="createtime" column="createTime" />
             <result property="updatetime" column="updateTime" />
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,itemId,userId,isDelete,createTime,updateTime
+        id,itemId,orderNumber,itemName,userId,num,isDelete,createTime,updateTime
     </sql>
 </mapper>

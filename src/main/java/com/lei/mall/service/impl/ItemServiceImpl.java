@@ -68,6 +68,7 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         item.setName(itemAddRequest.getName());
         item.setCategoryid(itemAddRequest.getCategoryid());
         item.setPrice(itemAddRequest.getPrice());
+        item.setOrder_count(0L);
 
         if (StringUtils.isNotBlank(itemAddRequest.getDescription())) {
             item.setDescription(itemAddRequest.getDescription());
