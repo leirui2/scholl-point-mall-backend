@@ -13,8 +13,32 @@
             <result property="updateTime" column="updateTime" />
     </resultMap>
 
+    <resultMap id="CategoryVOResultMap" type="com.lei.mall.model.vo.CategoryVO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="totalOrderCount" column="totalOrderCount"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+    </resultMap>
+
     <sql id="Base_Column_List">
-        id,name,description,sortOrder,
-        isDelete,createTime,updateTime
+        id,name,description,isDelete,
+        createTime,updateTime
     </sql>
+
+    <select id="selectHotCategoryByPage" resultMap="CategoryVOResultMap">
+        SELECT
+            c.id,
+            c.name,
+            c.description,
+            COALESCE(SUM(i.order_count), 0) as totalOrderCount,
+            c.createTime,
+            c.updateTime
+        FROM category c
+        LEFT JOIN item i ON c.id = i.categoryId AND i.isDelete = 0
+        WHERE c.isDelete = 0
+        GROUP BY c.id, c.name, c.description, c.createTime, c.updateTime
+        ORDER BY totalOrderCount DESC
+    </select>
 </mapper>

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lei.mall.model.request.CategoryAddRequest;
 import com.lei.mall.model.request.CategoryQueryRequest;
 import com.lei.mall.model.request.CategoryUpdateRequest;
+import com.lei.mall.model.request.HotCategoryQueryRequest;
+import com.lei.mall.model.vo.CategoryVO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,4 +54,12 @@ public interface CategoryService extends IService<Category> {
      * @return 用户列表分页结果
      */
     PageResult<Category> listCategoryByPage(CategoryQueryRequest categoryQueryRequest, HttpServletRequest request);
+
+    /**
+     * 热门商品类别列表
+     * @param hotCategoryQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 用户列表分页结果
+     */
+    PageResult<CategoryVO> hotCategoryByPage(HotCategoryQueryRequest hotCategoryQueryRequest, HttpServletRequest request);
 }

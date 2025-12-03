@@ -401,6 +401,11 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         // 按销量降序排列（order_count字段）
         queryWrapper.orderByDesc("order_count");
 
+        //如果传了类别ID，就查询指定的ID
+        if (hotItemQueryRequest.getCategoryId()!=0){
+            queryWrapper.eq("categoryId",hotItemQueryRequest.getCategoryId());
+        }
+
         // 分页查询
         Page<Item> page = new Page<>(hotItemQueryRequest.getCurrent(), hotItemQueryRequest.getPageSize());
         this.page(page, queryWrapper);
@@ -413,8 +418,6 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
             page.setRecords(records);
         }
 
-        // 构造分页结果
-        PageResult<ItemVO> pageResult = new PageResult<>();
         // 转换实体对象为 VO 对象
         List<ItemVO> voList = new ArrayList<>();
         for (Item item : page.getRecords()) {
@@ -423,6 +426,8 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
             voList.add(vo);
         }
 
+        // 构造分页结果
+        PageResult<ItemVO> pageResult = new PageResult<>();
         pageResult.setRecords(voList);
         pageResult.setTotal(page.getTotal());
         pageResult.setCurrent(page.getCurrent());

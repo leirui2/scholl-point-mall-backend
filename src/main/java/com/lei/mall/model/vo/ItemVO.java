@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Data
 public class ItemVO implements Serializable {
 
+    private Long id;
 
     private Long categoryid;
 

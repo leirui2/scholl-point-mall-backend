@@ -1,6 +1,7 @@
 package com.lei.mall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.mall.common.ErrorCode;
@@ -13,6 +14,9 @@ import com.lei.mall.model.entity.User;
 import com.lei.mall.model.request.CategoryAddRequest;
 import com.lei.mall.model.request.CategoryQueryRequest;
 import com.lei.mall.model.request.CategoryUpdateRequest;
+import com.lei.mall.model.request.HotCategoryQueryRequest;
+import com.lei.mall.model.vo.CategoryVO;
+import com.lei.mall.model.vo.ItemVO;
 import com.lei.mall.model.vo.UserLoginVO;
 import com.lei.mall.service.CategoryService;
 import com.lei.mall.mapper.CategoryMapper;
@@ -20,10 +24,13 @@ import com.lei.mall.service.ItemService;
 import com.lei.mall.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @author lei
@@ -80,6 +87,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         }
         return category.getId();
     }
+
 
     /**
      * 商品类别信息修改
@@ -190,12 +198,46 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         return pageResult;
     }
 
+    /**
+     * 热门商品类别列表
+     * @param hotCategoryQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 用户列表分页结果
+     */
+    @Override
+    public PageResult<CategoryVO> hotCategoryByPage(HotCategoryQueryRequest hotCategoryQueryRequest, HttpServletRequest request) {
+        if (request == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "请求参数错误");
+        }
+        // 验证分页参数
+        if (hotCategoryQueryRequest.getCurrent() <= 0) {
+            hotCategoryQueryRequest.setCurrent(1);
+        }
+        if (hotCategoryQueryRequest.getPageSize() <= 0 || hotCategoryQueryRequest.getPageSize() > 100) {
+            hotCategoryQueryRequest.setPageSize(6);
+        }
+        // 使用自定义SQL查询，按类别内商品销量排序
+        Page<CategoryVO> page = new Page<>(hotCategoryQueryRequest.getCurrent(), hotCategoryQueryRequest.getPageSize());
+        IPage<CategoryVO> resultPage = this.baseMapper.selectHotCategoryByPage(page, hotCategoryQueryRequest);
+
+        // 构造分页结果
+        PageResult<CategoryVO> pageResult = new PageResult<>();
+        pageResult.setRecords(resultPage.getRecords());
+        pageResult.setTotal(resultPage.getTotal());
+        pageResult.setCurrent(resultPage.getCurrent());
+        pageResult.setSize(resultPage.getSize());
+
+        return pageResult;
+    }
+
 
     /**
      * 检查用户是否有管理员权限
      *
      * @param request HTTP请求
      */
+
+
     private void checkAdminPermission(HttpServletRequest request) {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "请求参数错误");

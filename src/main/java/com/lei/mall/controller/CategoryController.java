@@ -7,6 +7,7 @@ import com.lei.mall.exception.BusinessException;
 import com.lei.mall.model.entity.Category;
 import com.lei.mall.model.entity.User;
 import com.lei.mall.model.request.*;
+import com.lei.mall.model.vo.CategoryVO;
 import com.lei.mall.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -92,6 +93,18 @@ public class CategoryController {
     @PostMapping("/admin/listCategoryByPage")
     public ApiResponse<PageResult<Category>> listCategoryByPage(@RequestBody CategoryQueryRequest categoryQueryRequest, HttpServletRequest request) {
         PageResult<Category> pageResult = categoryService.listCategoryByPage(categoryQueryRequest, request);
+        return ResultUtils.success(pageResult);
+    }
+
+    /**
+     * 热门商品类别列表
+     * @param hotCategoryQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 用户列表分页结果
+     */
+    @PostMapping("/hotCategoryByPage")
+    public ApiResponse<PageResult<CategoryVO>> hotCategoryByPage(@RequestBody HotCategoryQueryRequest hotCategoryQueryRequest, HttpServletRequest request) {
+        PageResult<CategoryVO> pageResult = categoryService.hotCategoryByPage(hotCategoryQueryRequest, request);
         return ResultUtils.success(pageResult);
     }
 }

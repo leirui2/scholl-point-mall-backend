@@ -116,12 +116,14 @@ public class ItemController {
      * @param hotItemQueryRequest 查询条件
      * @param request HTTP请求
      * @return 商品信息列表分页结果
+     * 如果categoryId不为0，则按照指定类别查询，否则查询所有的商品
      */
     @PostMapping("/hotListItemByPage")
     public ApiResponse<PageResult<ItemVO>> hotListItemByPage(@RequestBody HotItemQueryRequest hotItemQueryRequest , HttpServletRequest request) {
         PageResult<ItemVO> pageResult = itemService.hotListItemByPage(hotItemQueryRequest, request);
         return ResultUtils.success(pageResult);
     }
+
 
 
     /**
