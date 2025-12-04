@@ -58,10 +58,10 @@ public class PurchaseRecord implements Serializable {
     private Integer num;
 
     @TableField(value = "createTime")
-    private Date createtime;
+    private Date createTime;
 
     @TableField(value = "updateTime")
-    private Date updatetime;
+    private Date updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

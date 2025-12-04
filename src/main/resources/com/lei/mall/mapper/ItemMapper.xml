@@ -16,8 +16,8 @@
             <result property="unit" column="unit" />
             <result property="status" column="status" />
             <result property="isDelete" column="isDelete" />
-            <result property="createtime" column="createTime" />
-            <result property="updatetime" column="updateTime" />
+            <result property="createTime" column="createTime" />
+            <result property="updateTime" column="updateTime" />
     </resultMap>
 
     <select id="selectById" resultMap="BaseResultMap">
@@ -48,13 +48,13 @@
         stock,unit,status,order_count,isDelete,createTime,updateTime
     </sql>
 
-    <select id="selectVoById" resultType="com.lei.mall.model.vo.ItemCategoryVO">
+    <select id="selectVoById" resultMap="ItemCategoryVOResultMap">
         SELECT
             i.id,
             i.categoryId,
             c.name AS categoryName,
-            i.name,
-            i.description,
+            i.name AS itemName,
+            i.description AS itemDescription,
             i.imageUrl,
             i.price,
             i.stock,

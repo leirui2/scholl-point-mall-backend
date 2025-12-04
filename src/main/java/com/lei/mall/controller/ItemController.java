@@ -67,7 +67,7 @@ public class ItemController {
      * @return 商品信息完整信息
      */
     @GetMapping("/getItemById")
-    public ApiResponse<ItemCategoryVO> getItemById(long id, HttpServletRequest request) {
+    public ApiResponse<ItemCategoryVO> getItemById(String id, HttpServletRequest request) {
         ItemCategoryVO itemCategoryVO = itemService.getItemById(id, request);
         return ResultUtils.success(itemCategoryVO);
     }

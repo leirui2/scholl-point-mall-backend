@@ -30,7 +30,7 @@ public interface ItemMapper extends BaseMapper<Item> {
      * @param id 商品信息ID
      * @return 商品信息完整信息VO
      */
-    ItemCategoryVO selectVoById(long id);
+    ItemCategoryVO selectVoById(String id);
 
     /**
      * 分页联表查询商品和类别信息

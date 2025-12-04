@@ -3,7 +3,6 @@ package com.lei.mall.model.entity;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Data;
 
@@ -87,13 +86,13 @@ public class Item implements Serializable {
      * 
      */
     @TableField(value = "createTime")
-    private Date createtime;
+    private Date createTime;
 
     /**
      * 
      */
     @TableField(value = "updateTime")
-    private Date updatetime;
+    private Date updateTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

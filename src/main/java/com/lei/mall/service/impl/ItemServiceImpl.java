@@ -141,7 +141,7 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
      * @return 商品信息完整信息
      */
     @Override
-    public ItemCategoryVO getItemById(long id, HttpServletRequest request) {
+    public ItemCategoryVO getItemById(String id, HttpServletRequest request) {
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "请求参数错误");
         }
@@ -402,8 +402,8 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         queryWrapper.orderByDesc("order_count");
 
         //如果传了类别ID，就查询指定的ID
-        if (hotItemQueryRequest.getCategoryId()!=0){
-            queryWrapper.eq("categoryId",hotItemQueryRequest.getCategoryId());
+        if (hotItemQueryRequest.getCategoryId() != 0) {
+            queryWrapper.eq("categoryId", hotItemQueryRequest.getCategoryId());
         }
 
         // 分页查询

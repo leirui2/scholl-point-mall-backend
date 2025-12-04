@@ -37,7 +37,7 @@ public interface ItemService extends IService<Item> {
      * @param request HTTP请求
      * @return 商品信息完整信息
      */
-    ItemCategoryVO getItemById(long id, HttpServletRequest request);
+    ItemCategoryVO getItemById(String id, HttpServletRequest request);
 
     /**
      * 管理员更新商品信息状态（启用/禁用）
