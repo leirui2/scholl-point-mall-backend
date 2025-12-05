@@ -32,7 +32,7 @@
             c.id,
             c.name,
             c.description,
-            COALESCE(SUM(i.order_count), 0) as totalOrderCount,
+            COALESCE(SUM(i.orderCount), 0) as totalOrderCount,
             c.createTime,
             c.updateTime
         FROM category c

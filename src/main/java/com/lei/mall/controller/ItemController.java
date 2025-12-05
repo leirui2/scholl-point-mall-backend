@@ -61,7 +61,7 @@ public class ItemController {
 
 
     /**
-     * 管理员根据ID查询商品信息完整信息
+     * 根据ID查询商品脱敏信息
      * @param id 商品信息ID
      * @param request HTTP请求
      * @return 商品信息完整信息

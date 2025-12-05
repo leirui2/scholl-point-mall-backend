@@ -18,7 +18,7 @@ public class ItemCategoryVO {
     private String description;
     private String imageurl;
     private Integer price;
-    private Long order_count;
+    private Long orderCount;
     private Integer stock;
     private String unit;
     private Integer status;

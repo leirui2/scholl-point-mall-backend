@@ -127,13 +127,13 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
             // 更新库存
             latestItem.setStock(latestItem.getStock() - num);
             // 更新订单数
-            Long currentOrderCount = latestItem.getOrder_count();
+            Long currentOrderCount = latestItem.getOrderCount();
             System.out.println("最新的商品信息："+latestItem);
             System.out.println("当前已经下单数 ： " + currentOrderCount);
             if (currentOrderCount == null) {
                 currentOrderCount = 0L;
             }
-            latestItem.setOrder_count(currentOrderCount + 1);
+            latestItem.setOrderCount(currentOrderCount + 1);
             // 保存更新
             itemService.updateById(latestItem);
 

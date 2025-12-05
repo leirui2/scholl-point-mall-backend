@@ -154,7 +154,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
     }
 
     /**
-     * 管理员分页查询商品类别列表
+     * 分页查询商品类别列表
      * @param categoryQueryRequest 查询条件
      * @param request HTTP请求
      * @return 用户列表分页结果
@@ -162,8 +162,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
     @Override
     public PageResult<Category> listCategoryByPage(CategoryQueryRequest categoryQueryRequest, HttpServletRequest request) {
         //校验权限
-        checkAdminPermission(request);
-
+        if (request == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "请求参数错误");
+        }
         // 验证分页参数
         if (categoryQueryRequest.getCurrent() <= 0) {
             categoryQueryRequest.setCurrent(1);

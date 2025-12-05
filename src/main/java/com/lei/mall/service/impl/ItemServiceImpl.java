@@ -71,7 +71,7 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         item.setName(itemAddRequest.getName());
         item.setCategoryid(itemAddRequest.getCategoryid());
         item.setPrice(itemAddRequest.getPrice());
-        item.setOrder_count(0L);
+        item.setOrderCount(0L);
 
         if (StringUtils.isNotBlank(itemAddRequest.getDescription())) {
             item.setDescription(itemAddRequest.getDescription());
@@ -135,7 +135,7 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
     }
 
     /**
-     * 管理员根据ID查询商品信息完整信息
+     * 根据ID查询商品脱敏信息
      * @param id 商品信息ID
      * @param request HTTP请求
      * @return 商品信息完整信息
@@ -353,6 +353,9 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         // 如果有类别ID 就查询
         queryWrapper.eq(itemQueryRequest.getCategoryid() != null && itemQueryRequest.getCategoryid() > 0, "categoryId", itemQueryRequest.getCategoryid());
 
+        // 显式指定需要查询的字段，确保包含orderCount
+        queryWrapper.select("id", "categoryId", "name", "description", "imageUrl", "price", "orderCount", "stock", "unit");
+
         // 分页查询
         Page<Item> page = new Page<>(itemQueryRequest.getCurrent(), itemQueryRequest.getPageSize());
         this.page(page, queryWrapper);
@@ -364,6 +367,8 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         for (Item item : page.getRecords()) {
             ItemVO vo = new ItemVO();
             BeanUtils.copyProperties(item, vo);
+            // 确保orderCount字段正确赋值
+            vo.setOrderCount(item.getOrderCount());
             voList.add(vo);
         }
 
@@ -398,8 +403,8 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
 
         // 只查询未删除的商品
         queryWrapper.eq("isDelete", 0);
-        // 按销量降序排列（order_count字段）
-        queryWrapper.orderByDesc("order_count");
+        // 按销量降序排列（orderCount字段）
+        queryWrapper.orderByDesc("orderCount");
 
         //如果传了类别ID，就查询指定的ID
         if (hotItemQueryRequest.getCategoryId() != 0) {

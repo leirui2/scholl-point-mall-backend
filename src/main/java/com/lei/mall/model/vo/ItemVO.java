@@ -23,6 +23,9 @@ public class ItemVO implements Serializable {
     private String imageurl;
 
     private Integer price;
+    private Long orderCount;
+    private Integer stock;
+
 
     private String unit;
 

@@ -11,7 +11,7 @@
             <result property="description" column="description" />
             <result property="imageurl" column="imageUrl" />
             <result property="price" column="price" />
-            <result property="order_count" column="order_count"/>
+            <result property="orderCount" column="orderCount"/>
             <result property="stock" column="stock" />
             <result property="unit" column="unit" />
             <result property="status" column="status" />
@@ -36,7 +36,7 @@
         <result property="price" column="price"/>
         <result property="stock" column="stock"/>
         <result property="unit" column="unit"/>
-        <result property="order_count" column="order_count"/>
+        <result property="orderCount" column="orderCount"/>
         <result property="status" column="status"/>
         <result property="categoryName" column="categoryName"/>
         <result property="createTime" column="createTime"/>
@@ -45,7 +45,7 @@
 
     <sql id="Base_Column_List">
         id,categoryId,name,description,imageUrl,price,
-        stock,unit,status,order_count,isDelete,createTime,updateTime
+        stock,unit,status,orderCount,isDelete,createTime,updateTime
     </sql>
 
     <select id="selectVoById" resultMap="ItemCategoryVOResultMap">
@@ -58,7 +58,7 @@
             i.imageUrl,
             i.price,
             i.stock,
-            i.order_count,
+            i.orderCount,
             i.unit,
             i.status,
             i.createTime,
@@ -77,7 +77,7 @@
             i.description AS itemDescription,
             i.imageUrl,
             i.price,
-            i.order_count,
+            i.orderCount,
             i.stock,
             i.unit,
             i.status,

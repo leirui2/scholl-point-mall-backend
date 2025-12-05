@@ -85,12 +85,12 @@ public class CategoryController {
     }
 
     /**
-     * 管理员分页查询商品类别列表
+     * 分页查询商品类别列表
      * @param categoryQueryRequest 查询条件
      * @param request HTTP请求
      * @return 用户列表分页结果
      */
-    @PostMapping("/admin/listCategoryByPage")
+    @PostMapping("/listCategoryByPage")
     public ApiResponse<PageResult<Category>> listCategoryByPage(@RequestBody CategoryQueryRequest categoryQueryRequest, HttpServletRequest request) {
         PageResult<Category> pageResult = categoryService.listCategoryByPage(categoryQueryRequest, request);
         return ResultUtils.success(pageResult);
