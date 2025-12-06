@@ -19,7 +19,7 @@ public class SignInRecordQueryRequest extends PageRequest implements Serializabl
     /**
      * 用户ID
      */
-    private Long userId;
+    private String userId;
 
     /**
      * 签到日期
@@ -35,7 +35,6 @@ public class SignInRecordQueryRequest extends PageRequest implements Serializabl
     /**
      * 获得积分数量
      */
-
     private Integer points;
 
 

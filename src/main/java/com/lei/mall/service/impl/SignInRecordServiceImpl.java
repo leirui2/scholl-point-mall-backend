@@ -89,7 +89,6 @@ public class SignInRecordServiceImpl extends ServiceImpl<SignInRecordMapper, Sig
             //根据连续签到天数，判断应该得到多少积分
             QueryWrapper<SignInRule> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("consecutiveDays",userToUpdate.getConsecutiveSignInDays());
-            queryWrapper.eq("status",1);
             queryWrapper.select("points");
             SignInRule signInRule = signInRuleMapper.selectOne(queryWrapper);
             //设置签到记录对象积分
@@ -164,8 +163,11 @@ public class SignInRecordServiceImpl extends ServiceImpl<SignInRecordMapper, Sig
         queryWrapper.orderByDesc("createTime");
 
         // 构建动态查询条件
-        if (signInRecordQueryRequest.getUserId() != null && signInRecordQueryRequest.getUserId() > 0) {
+        if (StringUtils.isNotBlank(signInRecordQueryRequest.getUserId() )) {
             queryWrapper.eq("userId", signInRecordQueryRequest.getUserId());
+        }
+        if (signInRecordQueryRequest.getSignInDate() != null) {
+            queryWrapper.gt("signInDate", signInRecordQueryRequest.getSignInDate());
         }
 
         //按照连续签到天数查询
