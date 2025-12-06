@@ -1,5 +1,6 @@
 package com.lei.mall.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.mall.common.ErrorCode;
 import com.lei.mall.exception.BusinessException;
@@ -107,9 +108,26 @@ public class SignInRuleServiceImpl extends ServiceImpl<SignInRuleMapper, SignInR
         // 检查管理员权限
         checkAdmin(request);
 
+        Integer consecutiveDays = signInRuleAddRequest.getConsecutiveDays();
+        if (consecutiveDays == null || consecutiveDays <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "连续签到天数必须大于0");
+        }
+
+        QueryWrapper<SignInRule> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("consecutiveDays", consecutiveDays);
+        SignInRule existingRule = this.baseMapper.selectOne(queryWrapper);
+        if (existingRule != null){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "连续签到天数已存在");
+        }
+
+        Integer points = signInRuleAddRequest.getPoints();
+        if (points == null || points <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "签到奖励积分必须大于0");
+        }
+
         SignInRule signInRule = new SignInRule();
-        signInRule.setConsecutiveDays(signInRuleAddRequest.getConsecutiveDays());
-        signInRule.setPoints(signInRuleAddRequest.getPoints());
+        signInRule.setConsecutiveDays(consecutiveDays);
+        signInRule.setPoints(points);
         signInRule.setDescription(signInRuleAddRequest.getDescription());
         boolean result = this.save(signInRule) ;
         if (!result){

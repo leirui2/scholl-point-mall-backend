@@ -2,19 +2,23 @@ package com.lei.mall.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lei.mall.common.ApiResponse;
 import com.lei.mall.common.ErrorCode;
+import com.lei.mall.common.PageResult;
 import com.lei.mall.common.ResultUtils;
 import com.lei.mall.exception.BusinessException;
 import com.lei.mall.mapper.PointTransactionMapper;
 import com.lei.mall.mapper.SignInRuleMapper;
 import com.lei.mall.model.entity.*;
+import com.lei.mall.model.request.SignInRecordQueryRequest;
 import com.lei.mall.model.vo.UserLoginVO;
 import com.lei.mall.service.PointTransactionService;
 import com.lei.mall.service.SignInRecordService;
 import com.lei.mall.mapper.SignInRecordMapper;
 import com.lei.mall.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -129,6 +133,60 @@ public class SignInRecordServiceImpl extends ServiceImpl<SignInRecordMapper, Sig
             // 重新抛出异常以便触发事务回滚
             throw e;
         }
+    }
+
+    /**
+     * 分页查询签到记录
+     * @param signInRecordQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 签到记录列表分页结果
+     */
+    @Override
+    public PageResult<SignInRecord> listSignInRecordByPage(SignInRecordQueryRequest signInRecordQueryRequest, HttpServletRequest request) {
+        if (request == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "请求参数错误");
+        }
+        UserLoginVO loginUser = userService.getLoginUser(request);
+        if(loginUser == null || loginUser.getUserRole() != 1){
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR.getCode(), "无权限。");
+        }
+        // 验证分页参数
+        if (signInRecordQueryRequest.getCurrent() <= 0) {
+            signInRecordQueryRequest.setCurrent(1);
+        }
+        if (signInRecordQueryRequest.getPageSize() <= 0 || signInRecordQueryRequest.getPageSize() > 100) {
+            signInRecordQueryRequest.setPageSize(10);
+        }
+        // 构造查询条件
+        QueryWrapper<SignInRecord> queryWrapper = new QueryWrapper<>();
+
+        //按照创建时间升序
+        queryWrapper.orderByDesc("createTime");
+
+        // 构建动态查询条件
+        if (signInRecordQueryRequest.getUserId() != null && signInRecordQueryRequest.getUserId() > 0) {
+            queryWrapper.eq("userId", signInRecordQueryRequest.getUserId());
+        }
+
+        //按照连续签到天数查询
+        if (signInRecordQueryRequest.getConsecutiveDays() != null && signInRecordQueryRequest.getConsecutiveDays() > 0) {
+            queryWrapper.eq("consecutiveDays", signInRecordQueryRequest.getConsecutiveDays());
+        }
+        //按照获得积分数量查询
+        if (signInRecordQueryRequest.getPoints() != null && signInRecordQueryRequest.getPoints() > 0) {
+            queryWrapper.eq("points", signInRecordQueryRequest.getPoints());
+        }
+        // 分页查询
+        Page<SignInRecord> page = new Page<>(signInRecordQueryRequest.getCurrent(), signInRecordQueryRequest.getPageSize());
+        this.page(page, queryWrapper);
+
+        // 构造分页结果
+        PageResult<SignInRecord> pageResult = new PageResult<>();
+        pageResult.setRecords(page.getRecords());
+        pageResult.setTotal(page.getTotal());
+        pageResult.setCurrent(page.getCurrent());
+        pageResult.setSize(page.getSize());
+        return pageResult;
     }
 
     /**

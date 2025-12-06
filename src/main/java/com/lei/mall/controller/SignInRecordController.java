@@ -2,13 +2,14 @@ package com.lei.mall.controller;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.lei.mall.common.ApiResponse;
+import com.lei.mall.common.PageResult;
 import com.lei.mall.common.ResultUtils;
+import com.lei.mall.model.entity.Category;
 import com.lei.mall.model.entity.SignInRecord;
+import com.lei.mall.model.request.CategoryQueryRequest;
+import com.lei.mall.model.request.SignInRecordQueryRequest;
 import com.lei.mall.service.SignInRecordService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -36,4 +37,15 @@ public class SignInRecordController {
     }
 
 
+    /**
+     * 分页查询签到记录
+     * @param signInRecordQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 签到记录列表分页结果
+     */
+    @PostMapping("/listSignInRecordByPage")
+    public ApiResponse<PageResult<SignInRecord>> listSignInRecordByPage(@RequestBody SignInRecordQueryRequest signInRecordQueryRequest, HttpServletRequest request) {
+        PageResult<SignInRecord> pageResult = signInRecordService.listSignInRecordByPage(signInRecordQueryRequest, request);
+        return ResultUtils.success(pageResult);
+    }
 }
