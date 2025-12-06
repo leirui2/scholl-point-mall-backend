@@ -1,5 +1,6 @@
 package com.lei.mall.model.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -65,6 +66,11 @@ public class UserLogin implements Serializable {
      * 用户角色: 0 - 普通用户 1 - 管理员
      */
     private Integer userRole;
+
+    /**
+     * 连续签到天数
+     */
+    private Integer consecutiveSignInDays;
 
     /**
      * 创建时间

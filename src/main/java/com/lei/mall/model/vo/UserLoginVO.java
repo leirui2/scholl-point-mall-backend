@@ -37,6 +37,10 @@ public class UserLoginVO implements Serializable {
      * 性别
      */
     private Integer gender;
+    /**
+     * 连续签到天数
+     */
+    private Integer consecutiveSignInDays;
 
     /**
      * 电话

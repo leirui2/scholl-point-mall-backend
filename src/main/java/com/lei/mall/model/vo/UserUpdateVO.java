@@ -45,6 +45,10 @@ public class UserUpdateVO implements Serializable {
      * 用户头像
      */
     private String userAvatar;
+    /**
+     * 连续签到天数
+     */
+    private Integer consecutiveSignInDays;
 
     /**
      * 用户简介
