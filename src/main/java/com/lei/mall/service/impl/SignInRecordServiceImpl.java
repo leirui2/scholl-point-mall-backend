@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -190,6 +191,77 @@ public class SignInRecordServiceImpl extends ServiceImpl<SignInRecordMapper, Sig
         pageResult.setSize(page.getSize());
         return pageResult;
     }
+
+    /**
+     * 判断当前ID用户是否签到
+     * @param request HTTP请求
+     * @return 是否签到
+     */
+    @Override
+    public Boolean isSignIn(HttpServletRequest request) {
+        // 从请求中获取用户ID
+        UserLoginVO loginUser = userService.getLoginUser(request);
+        if(loginUser == null){
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR.getCode(), "未登录，无权限。");
+        }
+        Long userId = loginUser.getId();
+
+        // 检查用户今天是否签到
+        QueryWrapper<SignInRecord> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userId", userId);
+
+        // 更准确地判断当天是否签到
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(23, 59, 59);
+
+        queryWrapper.ge("createTime", startOfDay)
+                .le("createTime", endOfDay);
+
+        long cnt = signInRecordMapper.selectCount(queryWrapper);
+        return cnt > 0;
+    }
+
+    /**
+     * 分页查询自己的签到记录
+     * @param signInRecordQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 签到记录列表分页结果
+     */
+    @Override
+    public PageResult<SignInRecord> listSignInMyRecordByPage(SignInRecordQueryRequest signInRecordQueryRequest, HttpServletRequest request) {
+        // 从请求中获取用户ID
+        UserLoginVO loginUser = userService.getLoginUser(request);
+        if(loginUser == null){
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR.getCode(), "未登录，无权限。");
+        }
+        Long userId = loginUser.getId();
+
+        // 验证分页参数
+        if (signInRecordQueryRequest.getCurrent() <= 0) {
+            signInRecordQueryRequest.setCurrent(1);
+        }
+        if (signInRecordQueryRequest.getPageSize() <= 0 || signInRecordQueryRequest.getPageSize() > 100) {
+            signInRecordQueryRequest.setPageSize(10);
+        }
+        // 构造查询条件
+        QueryWrapper<SignInRecord> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userId", userId);
+        // 按照创建时间升序
+        queryWrapper.orderByDesc("createTime");
+        // 分页查询
+        Page<SignInRecord> page = new Page<>(signInRecordQueryRequest.getCurrent(), signInRecordQueryRequest.getPageSize());
+        this.page(page, queryWrapper);
+
+        // 构造分页结果
+        PageResult<SignInRecord> pageResult = new PageResult<>();
+        pageResult.setRecords(page.getRecords());
+        pageResult.setTotal(page.getTotal());
+        pageResult.setCurrent(page.getCurrent());
+        pageResult.setSize(page.getSize());
+        return pageResult;
+    }
+
 
     /**
      * 根据用户ID获取签到天数

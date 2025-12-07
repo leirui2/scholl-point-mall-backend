@@ -48,4 +48,26 @@ public class SignInRecordController {
         PageResult<SignInRecord> pageResult = signInRecordService.listSignInRecordByPage(signInRecordQueryRequest, request);
         return ResultUtils.success(pageResult);
     }
+
+    /**
+     * 分页查询自己的签到记录
+     * @param signInRecordQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 签到记录列表分页结果
+     */
+    @PostMapping("/listSignInMyRecordByPage")
+    public ApiResponse<PageResult<SignInRecord>> listSignInMyRecordByPage(@RequestBody SignInRecordQueryRequest signInRecordQueryRequest, HttpServletRequest request) {
+        PageResult<SignInRecord> pageResult = signInRecordService.listSignInMyRecordByPage(signInRecordQueryRequest, request);
+        return ResultUtils.success(pageResult);
+    }
+
+    /**
+     * 判断当前ID用户是否签到
+     * @param request HTTP请求
+     * @return 是否签到
+     */
+    @PostMapping("/isSignIn")
+    public ApiResponse<Boolean> isSignIn(HttpServletRequest request){
+        return ResultUtils.success(signInRecordService.isSignIn(request));
+    }
 }

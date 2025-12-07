@@ -28,4 +28,19 @@ public interface SignInRecordService extends IService<SignInRecord> {
      * @return 签到记录列表分页结果
      */
     PageResult<SignInRecord> listSignInRecordByPage(SignInRecordQueryRequest signInRecordQueryRequest, HttpServletRequest request);
+
+    /**
+     * 判断当前ID用户是否签到
+     * @param request HTTP请求
+     * @return 是否签到
+     */
+    Boolean isSignIn(HttpServletRequest request);
+
+    /**
+     * 分页查询自己的签到记录
+     * @param signInRecordQueryRequest 查询条件
+     * @param request HTTP请求
+     * @return 签到记录列表分页结果
+     */
+    PageResult<SignInRecord> listSignInMyRecordByPage(SignInRecordQueryRequest signInRecordQueryRequest, HttpServletRequest request);
 }
