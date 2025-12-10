@@ -39,12 +39,12 @@ public class ItemQueryRequest extends PageRequest implements Serializable {
     /**
      * 最低积分价格
      */
-    private Integer minPrice;
+    private Integer minPointPrice;
     
     /**
      * 最高积分价格
      */
-    private Integer maxPrice;
+    private Integer maxPointPrice;
 
     /**
      * 最低库存数量

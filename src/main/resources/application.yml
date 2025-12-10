@@ -6,7 +6,9 @@ server:
       cookie:
         max-age: 2592000
   port: 8084
-
+  # SSL配置
+  ssl:
+    enabled: false
 
 spring:
   mvc:
@@ -89,3 +91,22 @@ dromara:
         domain: http://10.126.126.1:8009/leirui-oss/ # 访问域名，注意" /"结尾，例如：http://minio.abc.com/abc/
         base-path: scholl point mall/ # 基础路径
 
+# 支付宝配置
+# 阿里支付宝沙箱控制台
+# https://open.alipay.com/develop/sandbox/account
+alipay:
+  easy:
+    # 请求协议
+    protocol: https
+    # 支付宝网关地址
+    gatewayHost: openapi-sandbox.dl.alipaydev.com
+    # 签名算法类型
+    signType: RSA2
+    # 应用ID
+    appId: 9021000158632516
+    # 商户私钥
+    merchantPrivateKey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCEYXzT2y+5tN775kKya0yK3OXqLmhX3HsgLlWr/yC98o+tl+TBYJyZE08ceHKRmPJGaFyatTR4eyuJ0ZLrbWHAZkZS9ZHfea3c4NNQc1krwijWWdFH/Q/s9ZX1Sg7Sb0DrdAsUrjpa9dsrDOGzZxDBfKBBK/0TzP6Vie/wUp0m0hKRcGnHCBemkZNvdbWfuMrxR5/Dtn6Vmf8I5YXejhZlEQ1HksQz6KtAzE2SgTXYmPG6kVvehDZh5izlnMHH5E9PKlAFF2JqGML3CV38B9pEm3spxKEqLprIsbcR69ly59GgfIkOMADlM7ko3KtOoNduLbUWcnkjcqL8KUEly6AzAgMBAAECggEAIZbu6n6iNHe9YKNDZywspst4FxyhYzHRmA/JszOwJiJG7KAu7hZKhdjNaQby4xiw2MagQK0b3Do8iOLBabU+aWhKDcC7u72PLQ1q8O3jwWOpowH1RVPj15dU7oFVE3YhPd0a9qtiqTPa4aiKGFBdgwrRStgThhOswVrXo94CfBfRU/SUv3wObVw88evniTyY4tbZE35PeNa0xOnRSozEiIaj/GOLNrK8ebPIDV+g+5hULp5WdhziiHreoeUwJfhq6nolFDTiT/trT9DT4mpTGM2Lr1Ss7evW8fHjMMLDajQ7zzt/D1ZNtWvegMTAdgpPuXamSY7fwokgorAEMW0qQQKBgQDSkvPlc8NcNDxO2MjLcoocYNfByKUBD6u96ysQso7G0s2KfIxnaEKDuJYEu0Sgb4gOxI2TJrDxSIjECCENOJWZtQtbtMNW/eZVhc5mZmD7Q4tpJIHrTPiNFMot/4YXxL3485Ha3bkavH1cEFPXDaaSK9z6A8sflfgHJBXT49k7UwKBgQCg8EdFWBr/j+lgY5z9T19EFkx9vh1IhD/52BazPO5AiqAOeDVGyukuQLrmKGM0JIYHaqsjvZPdPX2Bi/CU950lyRbo4qv4wDXjBiw9KlDt81YMMBVWg9UhRdmCOgJNsktwB6Yfd32MhPbmWJKpsL9P5nrLDKmjhLC0FAtBBYRLoQKBgAhKKLfbutEibU1dU2pO9Ajx9wx17akBCO3NGEDsBprlKZpOFOjtPdEZry44gRcfzOdn7Xrhhw24oUm2WDbBB4KpkezmTNpb3Hl5bwqw9RhvLEnTWhn9SbukGeF9sbW11RS74f4PxH289eJt8h8BNpGCkIx3IcP4j28YiJNy4NZpAoGBAJWB4ZPH33zeYj1LDMI9hBCqbnC5tlZxlUUyuxPTXLnUjhAjF8smISz4sSezCUWdUG1/aHERYlW7E+bO67ZXuUMq5f9+46d4WBcI2vwPXZNP5PX5jTkLy2jXjNJvtUgcg/wU/vxoctehhgRC8Cx3p6JASH5sywK+97CylinXSClBAoGBALjMMesB7DIZh+h577fIUPxi/IhahXvRgty8g/zajhc7ZislBjTFQurJ2n3bL8lrx7MOxS2B+o1RXPXwf7W/qZAIKQ/JCath+SWdOG83XU+WXZGBBO/cXJDhFEkFknnEonkTxMtNUzYXNLNyE3MUFpXnpXoSupAwawoDrHWpqkqi
+    # 支付宝公钥
+    alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgZQqF7v4uq0CjVoxs/NihW/AE6O0Ccqz4KwsxtUxOil6VdDSAol5IV/r/KA6fV7ANbd6f5SP6Wiygu7tvuQjKkgbcl5cUlYL7wLGfDtUuphUJJdkcRJr7F9j5E93EbJZkNkYVvsuHmXZq4dN96RrHzieigrQbftB4KYp16ZuX9ieO8UmOeU0bxbMqADXw003mWqwla74oqltRBs/5dMVD1E3DifTvo7AjVYnJYnu0sL2KEd7Z/YqMdmCFAfAGyzfRWT5/M3PTsC/bOjU8qBKGWj3aPrB4ZO5omIdHpVhdT3CTcsIO2XbPUt3apIgqp0FrBo5XH5+um89JXDMH8mb8wIDAQAB
+    # 异步通知地址
+    notifyUrl: http://71fae421.r39.cpolar.top/api/notify

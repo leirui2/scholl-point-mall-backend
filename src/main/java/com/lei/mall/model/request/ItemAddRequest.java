@@ -36,7 +36,7 @@ public class ItemAddRequest implements Serializable {
     /**
      * 积分价格
      */
-    private Integer price;
+    private Integer pointPrice;
 
     /**
      * 库存数量

@@ -63,14 +63,14 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         if ((itemAddRequest.getCategoryid() == null)) {
             throw new BusinessException("商品所属类别不能为空");
         }
-        if (itemAddRequest.getPrice() == null) {
+        if (itemAddRequest.getPointPrice() == null) {
             throw new BusinessException("商品价格不能为空");
         }
 
         Item item = new Item();
         item.setName(itemAddRequest.getName());
         item.setCategoryid(itemAddRequest.getCategoryid());
-        item.setPrice(itemAddRequest.getPrice());
+        item.setPointPrice(itemAddRequest.getPointPrice());
         item.setOrderCount(0L);
 
         if (StringUtils.isNotBlank(itemAddRequest.getDescription())) {
@@ -118,8 +118,8 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         if (StringUtils.isNotBlank(itemUpdateRequest.getUnit())){
             item.setUnit(itemUpdateRequest.getUnit());
         }
-        if (itemUpdateRequest.getPrice() != null){
-            item.setPrice(itemUpdateRequest.getPrice());
+        if (itemUpdateRequest.getPointPrice() != null){
+            item.setPointPrice(itemUpdateRequest.getPointPrice());
         }
         if (itemUpdateRequest.getStock() != null){
             item.setStock(itemUpdateRequest.getStock());
@@ -219,17 +219,17 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
             queryWrapper.like("description", itemQueryRequest.getDescription());
         }
         // 价格区间查询 - 只有当值大于0时才进行查询
-        if (itemQueryRequest.getMinPrice() != null && itemQueryRequest.getMinPrice() > 0) {
-            if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice() > 0) {
+        if (itemQueryRequest.getMinPointPrice() != null && itemQueryRequest.getMinPointPrice() > 0) {
+            if (itemQueryRequest.getMaxPointPrice() != null && itemQueryRequest.getMaxPointPrice() > 0) {
                 // 如果最小价格和最大价格都大于0，则查询价格在区间内的商品
-                queryWrapper.between("price", itemQueryRequest.getMinPrice(), itemQueryRequest.getMaxPrice());
+                queryWrapper.between("pointPrice", itemQueryRequest.getMinPointPrice(), itemQueryRequest.getMaxPointPrice());
             } else {
                 // 如果只有最小价格大于0，则查询价格大于等于最小价格的商品
-                queryWrapper.ge("price", itemQueryRequest.getMinPrice());
+                queryWrapper.ge("pointPrice", itemQueryRequest.getMinPointPrice());
             }
-        } else if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice() > 0) {
+        } else if (itemQueryRequest.getMaxPointPrice() != null && itemQueryRequest.getMaxPointPrice() > 0) {
             // 如果只有最大价格大于0，则查询价格小于等于最大价格的商品
-            queryWrapper.le("price", itemQueryRequest.getMaxPrice());
+            queryWrapper.le("pointPrice", itemQueryRequest.getMaxPointPrice());
         }
         
         //库存区间查询 - 只有当值大于0时才进行查询
@@ -326,17 +326,17 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
             queryWrapper.like("description", itemQueryRequest.getDescription());
         }
         // 价格区间查询 - 只有当值大于0时才进行查询
-        if (itemQueryRequest.getMinPrice() != null && itemQueryRequest.getMinPrice() > 0) {
-            if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice() > 0) {
+        if (itemQueryRequest.getMinPointPrice() != null && itemQueryRequest.getMinPointPrice() > 0) {
+            if (itemQueryRequest.getMaxPointPrice() != null && itemQueryRequest.getMaxPointPrice() > 0) {
                 // 如果最小价格和最大价格都大于0，则查询价格在区间内的商品
-                queryWrapper.between("price", itemQueryRequest.getMinPrice(), itemQueryRequest.getMaxPrice());
+                queryWrapper.between("pointPrice", itemQueryRequest.getMinPointPrice(), itemQueryRequest.getMaxPointPrice());
             } else {
                 // 如果只有最小价格大于0，则查询价格大于等于最小价格的商品
-                queryWrapper.ge("price", itemQueryRequest.getMinPrice());
+                queryWrapper.ge("pointPrice", itemQueryRequest.getMinPointPrice());
             }
-        } else if (itemQueryRequest.getMaxPrice() != null && itemQueryRequest.getMaxPrice() > 0) {
+        } else if (itemQueryRequest.getMaxPointPrice() != null && itemQueryRequest.getMaxPointPrice() > 0) {
             // 如果只有最大价格大于0，则查询价格小于等于最大价格的商品
-            queryWrapper.le("price", itemQueryRequest.getMaxPrice());
+            queryWrapper.le("pointPrice", itemQueryRequest.getMaxPointPrice());
         }
 
         //库存区间查询 - 只有当值大于0时才进行查询
@@ -354,7 +354,7 @@ public class ItemServiceImpl extends ServiceImpl<ItemMapper, Item>
         queryWrapper.eq(itemQueryRequest.getCategoryid() != null && itemQueryRequest.getCategoryid() > 0, "categoryId", itemQueryRequest.getCategoryid());
 
         // 显式指定需要查询的字段，确保包含orderCount
-        queryWrapper.select("id", "categoryId", "name", "description", "imageUrl", "price", "orderCount", "stock", "unit");
+        queryWrapper.select("id", "categoryId", "name", "description", "imageUrl", "pointPrice", "orderCount", "stock", "unit");
 
         // 分页查询
         Page<Item> page = new Page<>(itemQueryRequest.getCurrent(), itemQueryRequest.getPageSize());

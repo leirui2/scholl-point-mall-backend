@@ -53,8 +53,8 @@ public class Item implements Serializable {
     /**
      * 积分价格
      */
-    @TableField(value = "price")
-    private Integer price;
+    @TableField(value = "pointPrice")
+    private Integer pointPrice;
 
     /**
      * 库存数量

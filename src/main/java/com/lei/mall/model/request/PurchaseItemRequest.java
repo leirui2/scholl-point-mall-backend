@@ -11,5 +11,7 @@ import java.io.Serializable;
 public class PurchaseItemRequest implements Serializable {
     private Long itemId;
     private Integer num;
+    // 1=积分支付，2=支付宝支付
+    private Integer paymentType;
     private static final long serialVersionUID = 1L;
 }

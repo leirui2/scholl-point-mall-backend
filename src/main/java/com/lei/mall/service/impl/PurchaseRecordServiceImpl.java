@@ -10,6 +10,7 @@ import com.lei.mall.common.ResultUtils;
 import com.lei.mall.exception.BusinessException;
 import com.lei.mall.mapper.ItemMapper;
 import com.lei.mall.model.entity.Item;
+import com.lei.mall.model.entity.PointTransaction;
 import com.lei.mall.model.entity.PurchaseRecord;
 import com.lei.mall.model.entity.User;
 import com.lei.mall.model.request.PurchaseItemRequest;
@@ -17,6 +18,7 @@ import com.lei.mall.model.request.PurchaseRecordQueryRequest;
 import com.lei.mall.model.vo.PurchaseRecordListVO;
 import com.lei.mall.model.vo.UserLoginVO;
 import com.lei.mall.service.ItemService;
+import com.lei.mall.service.PointTransactionService;
 import com.lei.mall.service.PurchaseRecordService;
 import com.lei.mall.mapper.PurchaseRecordMapper;
 import com.lei.mall.service.UserService;
@@ -51,9 +53,11 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
     @Resource
     private ItemMapper itemMapper;
 
-
     @Resource
     private UserService userService;
+
+    @Resource
+    private PointTransactionService pointTransactionService;
 
     /**
      * 下单商品
@@ -99,7 +103,7 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
         if (user == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "用户不存在");
         }
-        int remainingPoints = user.getPoints() - (item.getPrice() * num);
+        int remainingPoints = user.getPoints() - (item.getPointPrice() * num);
         if ( remainingPoints < 0){
             throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(),"剩余积分不够");
         }
@@ -128,8 +132,8 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
             latestItem.setStock(latestItem.getStock() - num);
             // 更新订单数
             Long currentOrderCount = latestItem.getOrderCount();
-            System.out.println("最新的商品信息："+latestItem);
-            System.out.println("当前已经下单数 ： " + currentOrderCount);
+//            System.out.println("最新的商品信息："+latestItem);
+//            System.out.println("当前已经下单数 ： " + currentOrderCount);
             if (currentOrderCount == null) {
                 currentOrderCount = 0L;
             }
@@ -147,7 +151,25 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
             String orderNo = OrderNoUtils.generateOrderNo();
             purchaseRecord.setOrderNumber(orderNo);
 
-            this.save(purchaseRecord);
+            Boolean res = this.save(purchaseRecord);
+            if (!res) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "添加购买记录保存失败");
+            }
+            //积分流水记录表
+            PointTransaction pointTransaction = new PointTransaction();
+            pointTransaction.setPoints((item.getPointPrice() * num));
+            //积分变动类型 (1: 签到奖励, 2: 兑换商品, 3: 补签扣除等)
+            pointTransaction.setType(2);
+            pointTransaction.setUserId(user.getId());
+            //获取购买记录表对象的ID
+            pointTransaction.setBusinessId(purchaseRecord.getId());
+            String msg =  "兑换了 "+num+" 个编号是 "+ + itemId + " 的商品，共用了 " +(item.getPointPrice() * num) + "积分。" ;
+            pointTransaction.setDescription(msg);
+            res = pointTransactionService.save(pointTransaction);
+            if (!res) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "积分流水记录表保存失败");
+            }
+
 
         }  catch (Exception e) {
             // 系统异常记录日志并抛出

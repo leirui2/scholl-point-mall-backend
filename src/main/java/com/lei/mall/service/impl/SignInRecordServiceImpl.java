@@ -115,6 +115,7 @@ public class SignInRecordServiceImpl extends ServiceImpl<SignInRecordMapper, Sig
             //积分流水记录表
             PointTransaction pointTransaction = new PointTransaction();
             pointTransaction.setPoints(signInRecord.getPoints());
+            //积分变动类型 (1: 签到奖励, 2: 兑换商品, 3: 补签扣除等)
             pointTransaction.setType(1);
             pointTransaction.setUserId(loginUser.getId());
             //获取签到记录表对象的ID

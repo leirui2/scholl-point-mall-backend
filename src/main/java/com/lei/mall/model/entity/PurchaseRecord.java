@@ -33,6 +33,24 @@ public class PurchaseRecord implements Serializable {
     private String orderNumber;
 
     /**
+     * 支付状态：0-待支付，1-已支付，2-已取消，3-支付失败
+     */
+    @TableField(value = "paymentStatus")
+    private Integer paymentStatus;
+
+    /**
+     * 支付金额
+     */
+    @TableField(value = "paymentAmount")
+    private Integer paymentAmount;
+
+    /**
+     * 支付时间
+     */
+    @TableField(value = "paymentTime")
+    private Date paymentTime;
+
+    /**
      * 商品名称
      */
     @TableField(value = "itemName")

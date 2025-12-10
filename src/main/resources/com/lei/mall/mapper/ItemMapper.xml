@@ -10,7 +10,7 @@
             <result property="name" column="name" />
             <result property="description" column="description" />
             <result property="imageurl" column="imageUrl" />
-            <result property="price" column="price" />
+            <result property="pointPrice" column="pointPrice" />
             <result property="orderCount" column="orderCount"/>
             <result property="stock" column="stock" />
             <result property="unit" column="unit" />
@@ -33,7 +33,7 @@
         <result property="name" column="itemName"/>
         <result property="description" column="itemDescription"/>
         <result property="imageurl" column="imageUrl"/>
-        <result property="price" column="price"/>
+        <result property="pointPrice" column="pointPrice"/>
         <result property="stock" column="stock"/>
         <result property="unit" column="unit"/>
         <result property="orderCount" column="orderCount"/>
@@ -44,7 +44,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,categoryId,name,description,imageUrl,price,
+        id,categoryId,name,description,imageUrl,pointPrice,
         stock,unit,status,orderCount,isDelete,createTime,updateTime
     </sql>
 
@@ -56,7 +56,7 @@
             i.name AS itemName,
             i.description AS itemDescription,
             i.imageUrl,
-            i.price,
+            i.pointPrice,
             i.stock,
             i.orderCount,
             i.unit,
@@ -76,7 +76,7 @@
             i.name AS itemName,
             i.description AS itemDescription,
             i.imageUrl,
-            i.price,
+            i.pointPrice,
             i.orderCount,
             i.stock,
             i.unit,
@@ -96,17 +96,17 @@
         <if test="query.categoryName != null and query.categoryName != ''">
             AND c.name LIKE CONCAT('%', #{query.categoryName}, '%')
         </if>
-        <if test="query.minPrice != null and query.minPrice > 0">
-            <if test="query.maxPrice != null and query.maxPrice > 0">
-                AND i.price BETWEEN #{query.minPrice} AND #{query.maxPrice}
+        <if test="query.minPointPrice != null and query.minPointPrice > 0">
+            <if test="query.maxPointPrice != null and query.maxPointPrice > 0">
+                AND i.pointPrice BETWEEN #{query.minPointPrice} AND #{query.maxPointPrice}
             </if>
-            <if test="query.maxPrice == null or query.maxPrice &lt;= 0">
-                AND i.price >= #{query.minPrice}
+            <if test="query.maxPointPrice == null or query.maxPointPrice &lt;= 0">
+                AND i.pointPrice >= #{query.minPointPrice}
             </if>
         </if>
-        <if test="query.minPrice == null or query.minPrice &lt;= 0">
-            <if test="query.maxPrice != null and query.maxPrice > 0">
-                AND i.price &lt;= #{query.maxPrice}
+        <if test="query.minPointPrice == null or query.minPointPrice &lt;= 0">
+            <if test="query.maxPointPrice != null and query.maxPointPrice > 0">
+                AND i.pointPrice &lt;= #{query.maxPointPrice}
             </if>
         </if>
         <if test="query.minStock != null and query.minStock > 0">

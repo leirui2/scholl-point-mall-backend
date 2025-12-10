@@ -22,7 +22,7 @@ public class ItemVO implements Serializable {
 
     private String imageurl;
 
-    private Integer price;
+    private Integer pointPrice;
     private Long orderCount;
     private Integer stock;
 
