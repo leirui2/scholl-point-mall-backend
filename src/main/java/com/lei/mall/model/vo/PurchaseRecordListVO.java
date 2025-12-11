@@ -4,6 +4,7 @@ import com.lei.mall.model.entity.Item;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -18,6 +19,9 @@ public class PurchaseRecordListVO  implements Serializable {
     private Item item;
     private String itemName;
     private Long userId;
+    private Integer paymentStatus;
+    private BigDecimal paymentAmount;
+    private Date paymentTime;
     private Integer num;
     private String orderNumber;
     private Date createTime;

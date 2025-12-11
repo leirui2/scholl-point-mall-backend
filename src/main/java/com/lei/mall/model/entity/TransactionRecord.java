@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Data;
 
@@ -38,7 +39,7 @@ public class TransactionRecord implements Serializable {
      * money 交易金额
      */
     @TableField(value = "money")
-    private String money;
+    private BigDecimal money;
 
     /**
      * 积分变动数量

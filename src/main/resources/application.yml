@@ -109,4 +109,4 @@ alipay:
     # 支付宝公钥
     alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgZQqF7v4uq0CjVoxs/NihW/AE6O0Ccqz4KwsxtUxOil6VdDSAol5IV/r/KA6fV7ANbd6f5SP6Wiygu7tvuQjKkgbcl5cUlYL7wLGfDtUuphUJJdkcRJr7F9j5E93EbJZkNkYVvsuHmXZq4dN96RrHzieigrQbftB4KYp16ZuX9ieO8UmOeU0bxbMqADXw003mWqwla74oqltRBs/5dMVD1E3DifTvo7AjVYnJYnu0sL2KEd7Z/YqMdmCFAfAGyzfRWT5/M3PTsC/bOjU8qBKGWj3aPrB4ZO5omIdHpVhdT3CTcsIO2XbPUt3apIgqp0FrBo5XH5+um89JXDMH8mb8wIDAQAB
     # 异步通知地址
-    notifyUrl: http://2170562.r39.cpolar.top/api/notify
+    notifyUrl: http://6f41ad8a.r39.cpolar.top/api/notify

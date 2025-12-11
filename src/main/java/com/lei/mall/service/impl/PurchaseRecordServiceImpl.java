@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +70,7 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
         if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(), "请求参数错误");
         }
+
         Long itemId = purchaseItemRequest.getItemId();
         Long userId = userService.getLoginUser(request).getId();
         Integer num = purchaseItemRequest.getNum();
@@ -158,7 +160,7 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
             //交易流水记录表
             TransactionRecord transactionRecord = new TransactionRecord();
             transactionRecord.setPayType(1);
-            transactionRecord.setMoney(String.valueOf(0));
+            transactionRecord.setMoney(BigDecimal.valueOf(0));
             transactionRecord.setPoints((item.getPointPrice() * num));
             //积分变动类型 (1: 签到奖励, 2: 兑换商品, 3: 补签扣除等)
             transactionRecord.setType(2);

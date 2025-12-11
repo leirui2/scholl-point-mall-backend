@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -113,7 +114,7 @@ public class SignInRecordServiceImpl extends ServiceImpl<SignInRecordMapper, Sig
             TransactionRecord transactionRecord = new TransactionRecord();
             transactionRecord.setPoints(signInRecord.getPoints());
             transactionRecord.setPayType(1);
-            transactionRecord.setMoney(String.valueOf(0));
+            transactionRecord.setMoney(BigDecimal.valueOf(0));
             //积分变动类型 (1: 签到奖励, 2: 兑换商品, 3: 补签扣除等)
             transactionRecord.setType(1);
             transactionRecord.setUserId(loginUser.getId());

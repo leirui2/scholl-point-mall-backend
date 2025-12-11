@@ -9,6 +9,9 @@
             <result property="itemId" column="itemId" />
             <result property="orderNumber" column="orderNumber" />
             <result property="itemName" column="itemName" />
+            <result property="paymentStatus" column="paymentStatus" />
+            <result property="paymentAmount" column="paymentAmount" />
+            <result property="paymentTime" column="paymentTime" />
             <result property="userId" column="userId" />
             <result property="num" column="num" />
             <result property="isDelete" column="isDelete" />
@@ -17,6 +20,6 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,itemId,orderNumber,itemName,userId,num,isDelete,createTime,updateTime
+        id,itemId,orderNumber,itemName,paymentStatus,paymentAmount,paymentTime,userId,num,isDelete,createTime,updateTime
     </sql>
 </mapper>

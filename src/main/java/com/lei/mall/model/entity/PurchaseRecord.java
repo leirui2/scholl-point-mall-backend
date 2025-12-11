@@ -3,6 +3,7 @@ package com.lei.mall.model.entity;
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import lombok.Data;
 
@@ -42,7 +43,7 @@ public class PurchaseRecord implements Serializable {
      * 支付金额
      */
     @TableField(value = "paymentAmount")
-    private Integer paymentAmount;
+    private BigDecimal paymentAmount;
 
     /**
      * 支付时间

@@ -63,8 +63,8 @@ public class AliPayServiceImpl implements AliPayService {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR.getCode(),"商品不存在");
             }
 
-            // 3. 计算总价（假设商品价格单位为分）
-            BigDecimal totalAmount = new BigDecimal(item.getPointPrice() * num).divide(new BigDecimal(100));
+            // 3. 计算总价（假设商品价格单位为角）
+            BigDecimal totalAmount = new BigDecimal(item.getPointPrice() * num).divide(new BigDecimal(10));
 
             // 4. 生成订单号
             String outTradeNo = OrderNoUtils.generateOrderNo();
@@ -77,7 +77,7 @@ public class AliPayServiceImpl implements AliPayService {
             record.setNum(num);
             record.setOrderNumber(outTradeNo);
             record.setPaymentStatus(0); // 待支付
-            record.setPaymentAmount(item.getPointPrice() * num);
+            record.setPaymentAmount(totalAmount);
             purchaseRecordService.save(record);
 
             // 6. 调用支付宝API生成二维码
@@ -130,8 +130,8 @@ public class AliPayServiceImpl implements AliPayService {
             }
 
             // 4. 验证金额
-            BigDecimal actualAmount = new BigDecimal(totalAmount).multiply(new BigDecimal(100));
-            if (actualAmount.intValue() != record.getPaymentAmount()) {
+            BigDecimal actualAmount = new BigDecimal(totalAmount);
+            if (actualAmount.compareTo(record.getPaymentAmount()) != 0) {
                 return false;
             }
 
@@ -146,7 +146,7 @@ public class AliPayServiceImpl implements AliPayService {
                 TransactionRecord transactionRecord = new TransactionRecord();
                 transactionRecord.setPoints(0);
                 transactionRecord.setPayType(2);
-                transactionRecord.setMoney(String.valueOf(actualAmount));
+                transactionRecord.setMoney(actualAmount);
                 //积分变动类型 (1: 签到奖励, 2: 兑换商品, 3: 补签扣除等)
                 transactionRecord.setType(2);
                 transactionRecord.setUserId(record.getUserId());
