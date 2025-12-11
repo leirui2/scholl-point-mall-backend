@@ -10,7 +10,7 @@ import com.lei.mall.common.ResultUtils;
 import com.lei.mall.exception.BusinessException;
 import com.lei.mall.mapper.ItemMapper;
 import com.lei.mall.model.entity.Item;
-import com.lei.mall.model.entity.PointTransaction;
+import com.lei.mall.model.entity.TransactionRecord;
 import com.lei.mall.model.entity.PurchaseRecord;
 import com.lei.mall.model.entity.User;
 import com.lei.mall.model.request.PurchaseItemRequest;
@@ -155,21 +155,22 @@ public class PurchaseRecordServiceImpl extends ServiceImpl<PurchaseRecordMapper,
             if (!res) {
                 throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "添加购买记录保存失败");
             }
-            //积分流水记录表
-            PointTransaction pointTransaction = new PointTransaction();
-            pointTransaction.setPoints((item.getPointPrice() * num));
+            //交易流水记录表
+            TransactionRecord transactionRecord = new TransactionRecord();
+            transactionRecord.setPayType(1);
+            transactionRecord.setMoney(String.valueOf(0));
+            transactionRecord.setPoints((item.getPointPrice() * num));
             //积分变动类型 (1: 签到奖励, 2: 兑换商品, 3: 补签扣除等)
-            pointTransaction.setType(2);
-            pointTransaction.setUserId(user.getId());
+            transactionRecord.setType(2);
+            transactionRecord.setUserId(user.getId());
             //获取购买记录表对象的ID
-            pointTransaction.setBusinessId(purchaseRecord.getId());
+            transactionRecord.setBusinessId(purchaseRecord.getId());
             String msg =  "兑换了 "+num+" 个编号是 "+ + itemId + " 的商品，共用了 " +(item.getPointPrice() * num) + "积分。" ;
-            pointTransaction.setDescription(msg);
-            res = pointTransactionService.save(pointTransaction);
+            transactionRecord.setDescription(msg);
+            res = pointTransactionService.save(transactionRecord);
             if (!res) {
-                throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "积分流水记录表保存失败");
+                throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "交易流水记录表保存失败");
             }
-
 
         }  catch (Exception e) {
             // 系统异常记录日志并抛出

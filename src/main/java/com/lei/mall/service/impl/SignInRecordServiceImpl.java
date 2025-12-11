@@ -9,7 +9,6 @@ import com.lei.mall.common.ErrorCode;
 import com.lei.mall.common.PageResult;
 import com.lei.mall.common.ResultUtils;
 import com.lei.mall.exception.BusinessException;
-import com.lei.mall.mapper.PointTransactionMapper;
 import com.lei.mall.mapper.SignInRuleMapper;
 import com.lei.mall.model.entity.*;
 import com.lei.mall.model.request.SignInRecordQueryRequest;
@@ -19,7 +18,6 @@ import com.lei.mall.service.SignInRecordService;
 import com.lei.mall.mapper.SignInRecordMapper;
 import com.lei.mall.service.UserService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +27,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 
 /**
 * @author lei
@@ -112,19 +109,21 @@ public class SignInRecordServiceImpl extends ServiceImpl<SignInRecordMapper, Sig
                 throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "用户信息更新失败");
             }
 
-            //积分流水记录表
-            PointTransaction pointTransaction = new PointTransaction();
-            pointTransaction.setPoints(signInRecord.getPoints());
+            //交易流水记录表
+            TransactionRecord transactionRecord = new TransactionRecord();
+            transactionRecord.setPoints(signInRecord.getPoints());
+            transactionRecord.setPayType(1);
+            transactionRecord.setMoney(String.valueOf(0));
             //积分变动类型 (1: 签到奖励, 2: 兑换商品, 3: 补签扣除等)
-            pointTransaction.setType(1);
-            pointTransaction.setUserId(loginUser.getId());
+            transactionRecord.setType(1);
+            transactionRecord.setUserId(loginUser.getId());
             //获取签到记录表对象的ID
-            pointTransaction.setBusinessId(signInRecord.getId());
+            transactionRecord.setBusinessId(signInRecord.getId());
             String msg =  loginUser.getId() + "签到成功，连续 " + userToUpdate.getConsecutiveSignInDays() + "天签到，获得了 "+signInRecord.getPoints() + "积分。" ;
-            pointTransaction.setDescription(msg);
-            boolean res = pointTransactionService.save(pointTransaction);
+            transactionRecord.setDescription(msg);
+            boolean res = pointTransactionService.save(transactionRecord);
             if (!res) {
-                throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "积分流水记录表保存失败");
+                throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "交易流水记录表保存失败");
             }
 
             return ResultUtils.success(signInRule.getPoints());

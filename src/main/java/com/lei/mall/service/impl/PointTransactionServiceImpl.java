@@ -1,7 +1,7 @@
 package com.lei.mall.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lei.mall.model.entity.PointTransaction;
+import com.lei.mall.model.entity.TransactionRecord;
 import com.lei.mall.service.PointTransactionService;
 import com.lei.mall.mapper.PointTransactionMapper;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 * @createDate 2025-12-05 23:01:11
 */
 @Service
-public class PointTransactionServiceImpl extends ServiceImpl<PointTransactionMapper, PointTransaction>
+public class PointTransactionServiceImpl extends ServiceImpl<PointTransactionMapper, TransactionRecord>
     implements PointTransactionService{
 
 }

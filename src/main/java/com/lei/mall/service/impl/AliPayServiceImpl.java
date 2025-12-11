@@ -2,18 +2,18 @@ package com.lei.mall.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.easysdk.factory.Factory;
-import com.alipay.easysdk.kernel.Config;
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
 import com.alipay.easysdk.payment.facetoface.models.AlipayTradePrecreateResponse;
+import com.lei.mall.common.ApiResponse;
 import com.lei.mall.common.ErrorCode;
+import com.lei.mall.common.ResultUtils;
 import com.lei.mall.config.AlipayConfig;
 import com.lei.mall.exception.BusinessException;
 import com.lei.mall.model.entity.Item;
+import com.lei.mall.model.entity.PayResultDTO;
 import com.lei.mall.model.entity.PurchaseRecord;
-import com.lei.mall.service.AliPayService;
-import com.lei.mall.service.ItemService;
-import com.lei.mall.service.PurchaseRecordService;
-import com.lei.mall.service.UserService;
+import com.lei.mall.model.entity.TransactionRecord;
+import com.lei.mall.service.*;
 import com.lei.mall.utils.OrderNoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,8 +43,11 @@ public class AliPayServiceImpl implements AliPayService {
     @Resource
     private PurchaseRecordService purchaseRecordService;
 
+    @Resource
+    private PointTransactionService pointTransactionService;
+
     @Override
-    public String generatePayQrCode(Long itemId, Integer num, HttpServletRequest request) {
+    public ApiResponse<PayResultDTO> generatePayQrCode(Long itemId, Integer num, HttpServletRequest request) {
         try {
             // 从请求中获取用户ID
             Long userId = userService.getLoginUser(request).getId();
@@ -79,6 +82,7 @@ public class AliPayServiceImpl implements AliPayService {
 
             // 6. 调用支付宝API生成二维码
             Factory.setOptions(alipayConfig.config());
+            // 创建预创建模型并设置超时时间
             AlipayTradePrecreateResponse response = Factory.Payment.FaceToFace()
                     .preCreate(item.getName(), outTradeNo, totalAmount.toString());
 
@@ -86,7 +90,16 @@ public class AliPayServiceImpl implements AliPayService {
             JSONObject json = JSONObject.parseObject(response.getHttpBody());
             JSONObject tradeResp = json.getJSONObject("alipay_trade_precreate_response");
 
-            return tradeResp.getString("qr_code");
+            String qrcode = tradeResp.getString("qr_code");
+
+            // 生成支付二维码和订单号的逻辑
+            PayResultDTO payResultDTO = new PayResultDTO();
+            payResultDTO.setQrCodeUrl(qrcode);
+            payResultDTO.setOrderNumber(outTradeNo);
+            payResultDTO.setItemName(item.getName());
+            payResultDTO.setTotalAmount(totalAmount);
+
+            return ResultUtils.success(payResultDTO);
 
         } catch (Exception e) {
             log.error("生成支付二维码失败: {}", e.getMessage(), e);
@@ -111,8 +124,8 @@ public class AliPayServiceImpl implements AliPayService {
                 return false;
             }
 
-            // 3. 验证支付状态
-            if (record.getPaymentStatus() == 1) { // 已支付
+            // 3. 验证支付状态 ，如果是已支付，直接返回
+            if (record.getPaymentStatus() == 1) {
                 return true; // 幂等处理
             }
 
@@ -124,9 +137,27 @@ public class AliPayServiceImpl implements AliPayService {
 
             // 5. 更新订单状态
             if ("TRADE_SUCCESS".equals(tradeStatus)) {
-                record.setPaymentStatus(1); // 已支付
+                // 更改状态为 已支付
+                record.setPaymentStatus(1);
                 record.setPaymentTime(new Date());
                 purchaseRecordService.updateById(record);
+
+                //交易流水记录表
+                TransactionRecord transactionRecord = new TransactionRecord();
+                transactionRecord.setPoints(0);
+                transactionRecord.setPayType(2);
+                transactionRecord.setMoney(String.valueOf(actualAmount));
+                //积分变动类型 (1: 签到奖励, 2: 兑换商品, 3: 补签扣除等)
+                transactionRecord.setType(2);
+                transactionRecord.setUserId(record.getUserId());
+                //获取签到记录表对象的ID
+                transactionRecord.setBusinessId(record.getId());
+                String msg =  "购买"+record.getId()+"商品成功，消费了 " + actualAmount + "元。" ;
+                transactionRecord.setDescription(msg);
+                boolean res = pointTransactionService.save(transactionRecord);
+                if (!res) {
+                    throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "交易流水记录表保存失败");
+                }
 
                 // 6. 更新商品库存
                 Item item = itemService.getById(record.getItemId());
@@ -135,12 +166,9 @@ public class AliPayServiceImpl implements AliPayService {
                     item.setOrderCount(item.getOrderCount() + 1);
                     itemService.updateById(item);
                 }
-
                 return true;
             }
-
             return false;
-
         } catch (Exception e) {
             log.error("处理支付回调失败: {}", e.getMessage(), e);
             return false;

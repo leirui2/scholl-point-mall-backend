@@ -1,6 +1,6 @@
 package com.lei.mall.mapper;
 
-import com.lei.mall.model.entity.PointTransaction;
+import com.lei.mall.model.entity.TransactionRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
 * @Entity com.lei.mall.model.entity.PointTransaction
 */
 @Mapper
-public interface PointTransactionMapper extends BaseMapper<PointTransaction> {
+public interface PointTransactionMapper extends BaseMapper<TransactionRecord> {
 
 }
 

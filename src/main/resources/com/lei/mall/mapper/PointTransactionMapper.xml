@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lei.mall.mapper.PointTransactionMapper">
 
-    <resultMap id="BaseResultMap" type="com.lei.mall.model.entity.PointTransaction">
+    <resultMap id="BaseResultMap" type="com.lei.mall.model.entity.TransactionRecord">
             <id property="id" column="id" />
             <result property="userId" column="userId" />
             <result property="points" column="points" />

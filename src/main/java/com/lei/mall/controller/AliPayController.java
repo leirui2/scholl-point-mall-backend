@@ -1,5 +1,8 @@
 package com.lei.mall.controller;
 
+import com.lei.mall.common.ApiResponse;
+import com.lei.mall.common.ResultUtils;
+import com.lei.mall.model.entity.PayResultDTO;
 import com.lei.mall.service.AliPayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +28,9 @@ public class AliPayController {
      * @param request HTTP请求对象
      * @return 二维码URL
      */
-    @GetMapping("/pay")
-    public String generatePayQrCode(Long itemId, Integer num,HttpServletRequest request) {
+    @PostMapping("/pay")
+    public ApiResponse<PayResultDTO> generatePayQrCode(Long itemId, Integer num, HttpServletRequest request) {
+
         return aliPayService.generatePayQrCode(itemId, num,request);
     }
 
@@ -36,7 +40,7 @@ public class AliPayController {
      * @return 响应结果
      */
     @PostMapping("/notify")
-    public String notify(HttpServletRequest request) {
+    public ApiResponse<String> notify(HttpServletRequest request) {
         log.info("收到支付宝支付回调");
 
         // 获取回调参数
@@ -49,9 +53,11 @@ public class AliPayController {
                 tradeStatus, outTradeNo, tradeNo, totalAmount);
 
         // 处理回调
-        boolean result = aliPayService.handlePayNotify(outTradeNo, tradeStatus, tradeNo, totalAmount);
-
-        return result ? "success" : "fail";
+        boolean res = aliPayService.handlePayNotify(outTradeNo, tradeStatus, tradeNo, totalAmount);
+        if (!res) {
+            log.error("处理支付宝回调失败");
+        }
+        return ResultUtils.success("ok");
     }
 
     /**
@@ -59,7 +65,7 @@ public class AliPayController {
      * @param outTradeNo 商户订单号
      * @return 支付状态
      */
-    @GetMapping("/query")
+    @PostMapping("/query")
     public String queryPayStatus(String outTradeNo) {
         return aliPayService.queryPayStatus(outTradeNo).getHttpBody();
     }

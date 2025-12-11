@@ -1,6 +1,8 @@
 package com.lei.mall.service;
 
 import com.alipay.easysdk.payment.common.models.AlipayTradeQueryResponse;
+import com.lei.mall.common.ApiResponse;
+import com.lei.mall.model.entity.PayResultDTO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +19,7 @@ public interface AliPayService {
      * @param request HTTP请求对象
      * @return 二维码URL
      */
-    String generatePayQrCode(Long itemId, Integer num, HttpServletRequest request);
+    ApiResponse<PayResultDTO> generatePayQrCode(Long itemId, Integer num, HttpServletRequest request);
 
     /**
      * 处理支付回调

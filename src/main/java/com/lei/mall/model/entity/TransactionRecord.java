@@ -9,13 +9,13 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 积分流水表
+ * 交易 积分 金额 流水表
  * @author lei
  * @TableName point_transaction
  */
-@TableName(value ="point_transaction")
+@TableName(value ="transaction_record")
 @Data
-public class PointTransaction implements Serializable {
+public class TransactionRecord implements Serializable {
     /**
      * 主键
      */
@@ -27,6 +27,18 @@ public class PointTransaction implements Serializable {
      */
     @TableField(value = "userId")
     private Long userId;
+
+    /**
+     * 支付方式（1：积分支付，2：支付宝支付）
+     */
+    @TableField(value = "payType")
+    private Integer payType;
+
+    /**
+     * money 交易金额
+     */
+    @TableField(value = "money")
+    private String money;
 
     /**
      * 积分变动数量
