@@ -101,6 +101,9 @@ src
 
 ## 核心接口
 
+## Knife4j 接口文档
+## http://localhost:8084/api/doc.html
+
 ### 用户相关
 #### 用户注册
 - **接口地址**: `POST /user/register`
